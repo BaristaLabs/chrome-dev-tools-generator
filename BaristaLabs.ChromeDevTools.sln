@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaristaLabs.ChromeDevTools.RemoteInterface", "BaristaLabs.ChromeDevTools.RemoteInterface\BaristaLabs.ChromeDevTools.RemoteInterface.csproj", "{5FFBDD1E-6443-411E-8A3E-1FDE4A79260E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaristaLabs.ChromeDevTools.RemoteInterface", "src\BaristaLabs.ChromeDevTools.RemoteInterface\BaristaLabs.ChromeDevTools.RemoteInterface.csproj", "{272D5654-FF72-41D5-9BFE-E1EBD1C1062C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteInterfaceCLI", "src\RemoteInterfaceCLI\RemoteInterfaceCLI.csproj", "{C9E52BEA-31A0-4E50-9227-D23059F664AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5FFBDD1E-6443-411E-8A3E-1FDE4A79260E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FFBDD1E-6443-411E-8A3E-1FDE4A79260E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5FFBDD1E-6443-411E-8A3E-1FDE4A79260E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5FFBDD1E-6443-411E-8A3E-1FDE4A79260E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{272D5654-FF72-41D5-9BFE-E1EBD1C1062C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{272D5654-FF72-41D5-9BFE-E1EBD1C1062C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{272D5654-FF72-41D5-9BFE-E1EBD1C1062C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{272D5654-FF72-41D5-9BFE-E1EBD1C1062C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9E52BEA-31A0-4E50-9227-D23059F664AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9E52BEA-31A0-4E50-9227-D23059F664AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9E52BEA-31A0-4E50-9227-D23059F664AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9E52BEA-31A0-4E50-9227-D23059F664AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

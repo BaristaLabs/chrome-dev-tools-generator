@@ -1,0 +1,78 @@
+﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.DebuggerProtocol
+{
+    using Newtonsoft.Json;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+
+    public sealed class TypeDefinition : ProtocolDefinitionItem
+    {
+        public TypeDefinition()
+        {
+            Enum = new HashSet<string>();
+            Properties = new Collection<TypeDefinition>();
+        }
+
+        [JsonProperty(PropertyName = "id")]
+        public string Id
+        {
+            get;
+            set;
+        }
+
+        [JsonProperty(PropertyName = "type")]
+        public string Kind
+        {
+            get;
+            set;
+        }
+
+        [JsonProperty(PropertyName = "enum")]
+        public ICollection<string> Enum
+        {
+            get;
+            set;
+        }
+
+        [JsonProperty(PropertyName = "properties")]
+        public ICollection<TypeDefinition> Properties
+        {
+            get;
+            set;
+        }
+
+        [JsonProperty(PropertyName = "items")]
+        public TypeDefinition Items
+        {
+            get;
+            set;
+        }
+
+        [JsonProperty(PropertyName = "minItems")]
+        public int MinItems
+        {
+            get;
+            set;
+        }
+
+        [JsonProperty(PropertyName = "maxItems")]
+        public int MaxItems
+        {
+            get;
+            set;
+        }
+
+        [JsonProperty(PropertyName = "$ref")]
+        public string TypeReference
+        {
+            get;
+            set;
+        }
+
+        [JsonProperty(PropertyName = "optional")]
+        public bool Optional
+        {
+            get;
+            set;
+        }
+    }
+}
