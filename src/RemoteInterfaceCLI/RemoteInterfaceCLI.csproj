@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntryPoint" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BaristaLabs.ChromeDevTools.RemoteInterface\BaristaLabs.ChromeDevTools.RemoteInterface.csproj" />
   </ItemGroup>
 
