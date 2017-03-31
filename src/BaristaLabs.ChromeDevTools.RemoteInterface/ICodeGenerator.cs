@@ -4,6 +4,6 @@
 
     public interface ICodeGenerator
     {
-        IDictionary<string, string> GenerateCode(CodeGenerationSettings settings);
+        IDictionary<string, string> GenerateCode(CodeGenerationSettings settings, dynamic options);
     }
 }

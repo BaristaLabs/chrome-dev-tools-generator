@@ -3,8 +3,9 @@
     using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System;
 
-    public sealed class EventDefinition : ProtocolDefinitionItem
+    public sealed class EventDefinition : ProtocolDefinitionItem, ICodeGenerator
     {
         public EventDefinition()
         {
@@ -16,6 +17,11 @@
         {
             get;
             set;
+        }
+
+        public IDictionary<string, string> GenerateCode(CodeGenerationSettings settings, dynamic options)
+        {
+            throw new NotImplementedException();
         }
     }
 }

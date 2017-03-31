@@ -6,11 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="chrome-debugging-protocol.json" />
+    <EmbeddedResource Remove="chrome-debugging-protocol.json" />
+    <None Remove="chrome-debugging-protocol.json" />
+    <Compile Remove="OutputProtocol\**" />
+    <EmbeddedResource Remove="OutputProtocol\**" />
+    <None Remove="OutputProtocol\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EntryPoint" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BaristaLabs.ChromeDevTools.RemoteInterface\BaristaLabs.ChromeDevTools.RemoteInterface.csproj" />
   </ItemGroup>
-
 </Project>

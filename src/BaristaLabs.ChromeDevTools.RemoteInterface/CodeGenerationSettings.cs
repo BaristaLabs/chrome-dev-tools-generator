@@ -26,7 +26,7 @@
         /// <summary>
         /// Gets or sets the absolute path to the folder containing the code generation templates.
         /// </summary>
-        public string TemplatePath
+        public string TemplatesPath
         {
             get;
             set;

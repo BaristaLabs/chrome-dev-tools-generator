@@ -1,10 +1,12 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.DebuggerProtocol
 {
+    using Humanizer;
     using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
-    public sealed class CommandDefinition : ProtocolDefinitionItem
+    public sealed class CommandDefinition : ProtocolDefinitionItem, ICodeGenerator
     {
         public CommandDefinition()
         {
@@ -40,6 +42,25 @@
         {
             get;
             set;
+        }
+
+        public IDictionary<string, string> GenerateCode(CodeGenerationSettings settings, dynamic options)
+        {
+            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            var commandGenerator = TemplatesManager.GetGeneratorForTemplate($"{settings.TemplatesPath}\\command.mustache");
+
+            var className = Name.Dehumanize();
+            string codeResult = commandGenerator.Render(new
+            {
+                command = this,
+                className = className,
+                domain = options.domain,
+                rootNamespace = settings.RootNamespace,
+            });
+
+            result.Add($"{settings.OutputPath}\\{options.domain.Name}\\{className}Command.cs", codeResult);
+            return result;
         }
     }
 }

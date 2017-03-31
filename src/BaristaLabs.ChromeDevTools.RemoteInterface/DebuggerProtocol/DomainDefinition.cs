@@ -4,9 +4,10 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Dynamic;
     using System.Linq;
 
-    public sealed class DomainDefinition : ProtocolDefinitionItem
+    public sealed class DomainDefinition : ProtocolDefinitionItem, ICodeGenerator
     {
         public DomainDefinition()
         {
@@ -52,14 +53,18 @@
             set;
         }
 
-        public CommandDefinition GetCommand(string name)
+        public IDictionary<string, string> GenerateCode(CodeGenerationSettings settings, dynamic options)
         {
-            return Commands.SingleOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
-        }
+            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        public TypeDefinition GetType(string name)
-        {
-            return Types.SingleOrDefault(t => string.Equals(t.Name, name, StringComparison.OrdinalIgnoreCase));
+            foreach (var command in Commands)
+            {
+                command.GenerateCode(settings, new { domain = this })
+                    .ToList()
+                    .ForEach(x => result.Add(x.Key, x.Value));
+            }
+
+            return result;
         }
     }
 }

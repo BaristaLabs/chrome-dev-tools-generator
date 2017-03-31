@@ -8,12 +8,14 @@
         private const string DefaultChromeDebuggingProtocolPath = "chrome-debugging-protocol.json";
 
         private const string DefaultOutputPath = "./OutputProtocol";
+        private const string DefaultTemplatesPath = "./Templates";
         private const string DefaultRootNamespace = "BaristaLabs.ChromeDevTools";
 
         public CliArguments()
             : base("RemoteInterfaceCLI")
         {
             ProtocolPath = DefaultChromeDebuggingProtocolPath;
+            TemplatesPath = DefaultTemplatesPath;
             OutputPath = DefaultOutputPath;
             RootNamespace = DefaultRootNamespace;
         }
@@ -49,6 +51,15 @@
                 LongName: "namespace")]
         [Help("Indicates the root namespace that the generated classes will be generated in [Default: BaristaLabs.ChromeDevTools]")]
         public string RootNamespace
+        {
+            get;
+            set;
+        }
+
+        [Option(ShortName: 't',
+                LongName: "template-path")]
+        [Help("Indicates the path to the code generation templates. [Default: ./Templates]")]
+        public string TemplatesPath
         {
             get;
             set;

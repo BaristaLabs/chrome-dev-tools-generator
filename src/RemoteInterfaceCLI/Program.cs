@@ -58,12 +58,21 @@
 
             var directoryInfo = Directory.CreateDirectory(args.OutputPath);
 
-            protocolDefinition.GenerateCode(new CodeGenerationSettings()
+            if (!Directory.Exists(args.TemplatesPath))
+                throw new FileNotFoundException($"The specified templates path ({args.TemplatesPath}) could not be found. Please check that the templates path exists and is populated with templates.");
+
+            var codeFiles = protocolDefinition.GenerateCode(new CodeGenerationSettings()
             {
                 OutputPath = args.OutputPath,
                 RootNamespace = args.RootNamespace,
-                TemplatePath = $"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}\\templates",
-            });
+                TemplatesPath = args.TemplatesPath
+            }, null);
+
+            foreach(var codeFile in codeFiles)
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(codeFile.Key));
+                File.WriteAllText(codeFile.Key, codeFile.Value);
+            }
 
             //Completed.
             Console.WriteLine("All done!");

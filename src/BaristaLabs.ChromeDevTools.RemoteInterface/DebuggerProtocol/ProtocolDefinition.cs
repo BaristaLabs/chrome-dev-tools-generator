@@ -1,12 +1,10 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.DebuggerProtocol
 {
-    using Mustache;
     using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.IO;
-    using System.Reflection;
-    using System;
+    using System.Linq;
 
     public sealed class ProtocolDefinition : ICodeGenerator
     {
@@ -29,22 +27,18 @@
             set;
         }
 
-        public IDictionary<string, string> GenerateCode(CodeGenerationSettings settings)
+        public IDictionary<string, string> GenerateCode(CodeGenerationSettings settings, dynamic options)
         {
+            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
             foreach (var domain in Domains)
             {
-                var commandTemplate = File.ReadAllText($"{settings.TemplatePath}\\command.mustache");
-
-                var compiler = new FormatCompiler() { RemoveNewLines = false };
-                Generator generator = compiler.Compile(commandTemplate);
-                string result = generator.Render(new
-                {
-                    domain = domain,
-                    rootNamespace = settings.RootNamespace,
-                });
+                domain.GenerateCode(settings, null)
+                    .ToList()
+                    .ForEach(x => result.Add(x.Key, x.Value));
             }
 
-            return null;
+            return result;
         }
     }
 }
