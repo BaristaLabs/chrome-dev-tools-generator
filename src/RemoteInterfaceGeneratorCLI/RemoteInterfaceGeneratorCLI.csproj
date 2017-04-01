@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BaristaLabs.ChromeDevTools.Core\BaristaLabs.ChromeDevTools.Core.csproj" />
     <ProjectReference Include="..\BaristaLabs.ChromeDevTools.RemoteInterface\BaristaLabs.ChromeDevTools.RemoteInterface.csproj" />
   </ItemGroup>
 </Project>

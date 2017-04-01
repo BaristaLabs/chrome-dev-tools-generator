@@ -1,5 +1,6 @@
-﻿namespace RemoteInterfaceCLI
+﻿namespace RemoteInterfaceGeneratorCLI
 {
+    using BaristaLabs.ChromeDevTools;
     using BaristaLabs.ChromeDevTools.RemoteInterface;
     using BaristaLabs.ChromeDevTools.RemoteInterface.DebuggerProtocol;
     using EntryPoint;

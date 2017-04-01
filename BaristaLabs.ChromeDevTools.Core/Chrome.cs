@@ -1,4 +1,4 @@
-﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface
+﻿namespace BaristaLabs.ChromeDevTools
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;

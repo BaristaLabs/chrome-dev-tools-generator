@@ -1,4 +1,4 @@
-﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface
+﻿namespace BaristaLabs.ChromeDevTools
 {
     using System;
     using System.Diagnostics;
