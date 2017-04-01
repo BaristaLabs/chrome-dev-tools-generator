@@ -9,7 +9,6 @@
     using NJsonSchema.Generation;
     using System;
     using System.IO;
-    using System.Reflection;
     using System.Threading.Tasks;
 
     class Program

@@ -1,5 +1,6 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.DebuggerProtocol
 {
+    using Humanizer;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -31,9 +32,83 @@
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var domain in Domains)
+            ICollection<DomainDefinition> domains;
+            if (settings.IncludeDeprecatedDomains)
+                domains = Domains;
+            else
+                domains = Domains
+                    .Where(d => d.Deprecated == false)
+                    .ToList();
+
+            IDictionary<string, TypeInfo> knownTypes = new Dictionary<string, TypeInfo>(StringComparer.OrdinalIgnoreCase);
+
+            //First pass - get all top-level types.
+            foreach (var domain in domains)
             {
-                domain.GenerateCode(settings, null)
+                foreach (var type in domain.Types)
+                {
+                    TypeInfo typeInfo;
+                    switch(type.Type)
+                    {
+                        case "object":
+                            typeInfo = new TypeInfo
+                            {
+                                Namespace = $"{settings.RootNamespace}.{domain.Name.Dehumanize()}",
+                                IsPrimitive = false,
+                                TypeName = type.Id.Dehumanize(),
+                            };
+                            break;
+                        case "string":
+                            if (type.Enum != null && type.Enum.Count() > 0)
+                                typeInfo = new TypeInfo
+                                {
+                                    Namespace = $"{settings.RootNamespace}.{domain.Name.Dehumanize()}",
+                                    IsPrimitive = false,
+                                    TypeName = type.Id.Dehumanize(),
+                                };
+                            else
+                                typeInfo = new TypeInfo
+                                {
+                                    IsPrimitive = true,
+                                    TypeName = "string"
+                                };
+                            break;
+                        case "array":
+                            if (type.Items == null || String.IsNullOrWhiteSpace(type.Items.Type))
+                                throw new NotImplementedException("Did not expect a top-level domain array type to specify a TypeReference");
+
+                            typeInfo = new TypeInfo
+                            {
+                                IsPrimitive = true,
+                                TypeName = $"{type.Items.Type}[]"
+                            };
+                            break;
+                        case "number":
+                            typeInfo = new TypeInfo
+                            {
+                                IsPrimitive = true,
+                                TypeName = "double"
+                            };
+                            break;
+                        case "integer":
+                            typeInfo = new TypeInfo
+                            {
+                                IsPrimitive = true,
+                                TypeName = "long"
+                            };
+                            break;
+                        default:
+                            throw new InvalidOperationException($"Unknown Type Definition Type: {type.Id}");
+                    }
+
+                    knownTypes.Add($"{domain.Name}.{type.Id}", typeInfo);
+                }
+            }
+
+            //Generate types/events/commands for all domains.
+            foreach (var domain in domains)
+            {
+                domain.GenerateCode(settings, new { knownTypes = knownTypes })
                     .ToList()
                     .ForEach(x => result.Add(x.Key, x.Value));
             }

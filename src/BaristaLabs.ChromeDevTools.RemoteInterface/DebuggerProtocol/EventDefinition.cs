@@ -1,9 +1,9 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.DebuggerProtocol
 {
     using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System;
 
     public sealed class EventDefinition : ProtocolDefinitionItem, ICodeGenerator
     {
@@ -21,7 +21,10 @@
 
         public IDictionary<string, string> GenerateCode(CodeGenerationSettings settings, dynamic options)
         {
-            throw new NotImplementedException();
+            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            var eventGenerator = TemplatesManager.GetGeneratorForTemplate($"{settings.TemplatesPath}\\event.mustache");
+            return result;
         }
     }
 }

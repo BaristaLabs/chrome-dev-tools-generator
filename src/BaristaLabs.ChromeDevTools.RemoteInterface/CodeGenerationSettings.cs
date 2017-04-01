@@ -1,10 +1,21 @@
-﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface
+﻿using System.Collections.Generic;
+
+namespace BaristaLabs.ChromeDevTools.RemoteInterface
 {
     /// <summary>
     /// Settings to be passed to a ICodeGenerator
     /// </summary>
     public sealed class CodeGenerationSettings
     {
+        public CodeGenerationSettings()
+        {
+            IncludeDeprecatedDomains = true;
+            UsingStatements = new List<string>()
+            {
+                "System"
+            };
+        }
+
         /// <summary>
         /// Gets or sets the absolute path to the folder where code files should be produced.
         /// </summary>
@@ -32,6 +43,22 @@
             set;
         }
 
-        
+        /// <summary>
+        /// Indicates whether or not domains marked as depreciated will be generated. (Default: true)
+        /// </summary>
+        public bool IncludeDeprecatedDomains
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The using statements that will be included on each generated file.
+        /// </summary>
+        public ICollection<string> UsingStatements
+        {
+            get;
+            set;
+        }
     }
 }

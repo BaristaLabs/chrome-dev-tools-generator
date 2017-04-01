@@ -1,0 +1,24 @@
+﻿namespace {{rootNamespace}}.{{domain.Name}}
+{
+    /// <summary>
+    /// {{type.Description}}
+    /// </summary>
+    public sealed class {{className}}
+    {
+        private string m_value;
+
+        private {{className}}(string value)
+        {
+            m_value = value;
+        }
+
+        public override string ToString()
+        {
+            return m_value;
+        }
+
+    {{#each type.Enum}}
+        public static {{className}} {{#dehumanize}}{{this}}{{/dehumanize}} = new {{className}}("{{this}}");
+    {{/each}}
+    }
+}

@@ -4,7 +4,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Dynamic;
     using System.Linq;
 
     public sealed class DomainDefinition : ProtocolDefinitionItem, ICodeGenerator
@@ -57,9 +56,23 @@
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
+            foreach (var type in Types)
+            {
+                type.GenerateCode(settings, new { domain = this, knownTypes = options.knownTypes })
+                    .ToList()
+                    .ForEach(x => result.Add(x.Key, x.Value));
+            }
+
+            foreach (var @event in Events)
+            {
+                @event.GenerateCode(settings, new { domain = this, knownTypes = options.knownTypes })
+                    .ToList()
+                    .ForEach(x => result.Add(x.Key, x.Value));
+            }
+
             foreach (var command in Commands)
             {
-                command.GenerateCode(settings, new { domain = this })
+                command.GenerateCode(settings, new { domain = this, knownTypes = options.knownTypes })
                     .ToList()
                     .ForEach(x => result.Add(x.Key, x.Value));
             }

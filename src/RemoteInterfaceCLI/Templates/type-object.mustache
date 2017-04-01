@@ -1,14 +1,14 @@
 ﻿namespace {{rootNamespace}}.{{domain.Name}}
 {
     /// <summary>
-    /// {{command.Description}}
+    /// {{type.Description}}
     /// </summary>
-    public sealed class {{className}}Command
+    public sealed class {{className}}
     {
-    {{#each command.Parameters}}
+    {{#each type.Properties}}
         /// <summary>
         /// {{Description}}
-        /// </summary>
+        ///</summary>
         public {{#typemap domain this knownTypes}}{{Type}}{{/typemap}} {{#dehumanize}}{{Name}}{{/dehumanize}}
         {
             get;

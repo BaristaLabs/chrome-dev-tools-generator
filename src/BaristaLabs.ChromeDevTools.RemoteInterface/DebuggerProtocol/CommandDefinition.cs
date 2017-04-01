@@ -56,6 +56,7 @@
                 command = this,
                 className = className,
                 domain = options.domain,
+                knownTypes = options.knownTypes,
                 rootNamespace = settings.RootNamespace,
             });
 
