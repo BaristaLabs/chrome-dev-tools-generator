@@ -1,4 +1,4 @@
-﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface
+﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.Generator
 {
     using System.Collections.Generic;
 

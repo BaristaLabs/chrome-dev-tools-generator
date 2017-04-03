@@ -1,6 +1,6 @@
-﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface
+﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.Generator
 {
-    using BaristaLabs.ChromeDevTools.RemoteInterface.DebuggerProtocol;
+    using BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition;
     using Mustache;
     using System;
     using System.Collections.Generic;

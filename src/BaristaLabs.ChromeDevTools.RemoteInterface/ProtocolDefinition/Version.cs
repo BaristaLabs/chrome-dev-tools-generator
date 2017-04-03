@@ -1,4 +1,4 @@
-﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.DebuggerProtocol
+﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition
 {
     using Newtonsoft.Json;
     using System;

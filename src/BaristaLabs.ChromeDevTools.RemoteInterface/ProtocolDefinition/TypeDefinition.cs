@@ -1,5 +1,6 @@
-﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.DebuggerProtocol
+﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition
 {
+    using BaristaLabs.ChromeDevTools.RemoteInterface.Generator;
     using Humanizer;
     using Mustache;
     using Newtonsoft.Json;

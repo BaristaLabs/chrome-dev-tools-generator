@@ -1,4 +1,4 @@
-﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface
+﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.Generator
 {
     public sealed class TypeInfo
     {

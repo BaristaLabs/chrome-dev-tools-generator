@@ -1,8 +1,8 @@
 ﻿namespace RemoteInterfaceGeneratorCLI
 {
     using BaristaLabs.ChromeDevTools;
-    using BaristaLabs.ChromeDevTools.RemoteInterface;
-    using BaristaLabs.ChromeDevTools.RemoteInterface.DebuggerProtocol;
+    using BaristaLabs.ChromeDevTools.RemoteInterface.Generator;
+    using BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition;
     using EntryPoint;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -26,7 +26,7 @@
 
             if (args.ForceDownload || !File.Exists(args.ProtocolPath))
             {
-                Console.WriteLine("Generating new protocol definition...");
+                Console.WriteLine("Obtaining protocol definition from installed Chrome version...");
 
                 using (var chrome = ChromeFactory.OpenChrome())
                 {
@@ -51,6 +51,7 @@
 
             //Begin the code generation process.
             //Delete the output folder if it exists.
+            Console.WriteLine("Generating protocol definition project...");
             if (Directory.Exists(args.OutputPath))
             {
                 Directory.Delete(args.OutputPath, true);

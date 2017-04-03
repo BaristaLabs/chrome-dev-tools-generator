@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace BaristaLabs.ChromeDevTools.RemoteInterface
+﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.Generator
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Settings to be passed to a ICodeGenerator
     /// </summary>
