@@ -124,6 +124,9 @@
                 if (m_chromeProcess != null)
                 {
                     if (m_chromeProcess.HasExited == false)
+                        m_chromeProcess.WaitForExit(5000);
+
+                    if (m_chromeProcess.HasExited == false)
                         m_chromeProcess.Kill();
 
                     m_chromeProcess.Dispose();
