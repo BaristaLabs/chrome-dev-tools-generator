@@ -29,7 +29,7 @@
                 rootNamespace = Settings.RootNamespace,
             });
 
-            result.Add(Path.Combine(options.domain.Name, $"{className}Command.cs"), codeResult);
+            result.Add(Path.Combine(options.domain.Name, $"{className}Event.cs"), codeResult);
 
             return result;
         }

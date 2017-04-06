@@ -3,7 +3,23 @@
     /// <summary>
     /// {{event.Description}}
     /// </summary>
-    public class {{event.Name}}Event
+    public sealed class {{className}}Event
     {
+    {{#each event.Parameters}}
+        {{#if Description}}
+        /// <summary>
+        /// {{Description}}
+        /// </summary>
+        {{#else}}
+        /// <summary>
+        /// Gets or sets the {{Name}}
+        /// </summary>
+        {{/if}}
+        public {{#typemap domain this knownTypes}}{{Type}}{{/typemap}} {{#dehumanize}}{{Name}}{{/dehumanize}}
+        {
+            get;
+            set;
+        }
+    {{/each}}
     }
 }

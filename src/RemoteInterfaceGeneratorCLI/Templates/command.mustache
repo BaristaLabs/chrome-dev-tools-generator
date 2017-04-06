@@ -6,9 +6,15 @@
     public sealed class {{className}}Command
     {
     {{#each command.Parameters}}
+        {{#if Description}}
         /// <summary>
         /// {{Description}}
         /// </summary>
+        {{#else}}
+        /// <summary>
+        /// Gets or sets the {{Name}}
+        /// </summary>
+        {{/if}}
         public {{#typemap domain this knownTypes}}{{Type}}{{/typemap}} {{#dehumanize}}{{Name}}{{/dehumanize}}
         {
             get;
