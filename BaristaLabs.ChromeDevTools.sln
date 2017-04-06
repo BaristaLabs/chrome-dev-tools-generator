@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.10
+VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaristaLabs.ChromeDevTools.RemoteInterface", "src\BaristaLabs.ChromeDevTools.RemoteInterface\BaristaLabs.ChromeDevTools.RemoteInterface.csproj", "{272D5654-FF72-41D5-9BFE-E1EBD1C1062C}"
 EndProject
@@ -9,13 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RemoteInterfaceGeneratorCLI
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6A72E13C-7BE0-4160-A76F-7DD4F713BCD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaristaLabs.ChromeDevTools.Core", "BaristaLabs.ChromeDevTools.Core\BaristaLabs.ChromeDevTools.Core.csproj", "{56A9D7BF-EB2C-41A5-854C-FA43B494440B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8D7CFCE2-3CD7-47D1-8A3C-D08876DD25FC}"
 	ProjectSection(SolutionItems) = preProject
-		LICENSE. = LICENSE.
+		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaristaLabs.ChromeDevTools.Core", "src\BaristaLabs.ChromeDevTools.Core\BaristaLabs.ChromeDevTools.Core.csproj", "{59915DF7-8896-4E71-8ECA-AC8E555350D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +31,10 @@ Global
 		{1BBE0807-FA0A-47AF-B621-7029DDF8A21A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BBE0807-FA0A-47AF-B621-7029DDF8A21A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BBE0807-FA0A-47AF-B621-7029DDF8A21A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56A9D7BF-EB2C-41A5-854C-FA43B494440B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56A9D7BF-EB2C-41A5-854C-FA43B494440B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56A9D7BF-EB2C-41A5-854C-FA43B494440B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56A9D7BF-EB2C-41A5-854C-FA43B494440B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59915DF7-8896-4E71-8ECA-AC8E555350D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59915DF7-8896-4E71-8ECA-AC8E555350D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59915DF7-8896-4E71-8ECA-AC8E555350D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59915DF7-8896-4E71-8ECA-AC8E555350D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +42,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{272D5654-FF72-41D5-9BFE-E1EBD1C1062C} = {6A72E13C-7BE0-4160-A76F-7DD4F713BCD0}
 		{1BBE0807-FA0A-47AF-B621-7029DDF8A21A} = {6A72E13C-7BE0-4160-A76F-7DD4F713BCD0}
-		{56A9D7BF-EB2C-41A5-854C-FA43B494440B} = {6A72E13C-7BE0-4160-A76F-7DD4F713BCD0}
+		{59915DF7-8896-4E71-8ECA-AC8E555350D6} = {6A72E13C-7BE0-4160-A76F-7DD4F713BCD0}
 	EndGlobalSection
 EndGlobal
