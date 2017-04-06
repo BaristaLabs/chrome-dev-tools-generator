@@ -57,7 +57,7 @@
 
             foreach (var codeFile in codeFiles)
             {
-                var targetFilePath = Path.GetFullPath($"{cliArguments.OutputPath}{codeFile.Key}");
+                var targetFilePath = Path.GetFullPath(Path.Combine(cliArguments.OutputPath, codeFile.Key));
                 Directory.CreateDirectory(Path.GetDirectoryName(targetFilePath));
                 File.WriteAllText(targetFilePath, codeFile.Value);
             }

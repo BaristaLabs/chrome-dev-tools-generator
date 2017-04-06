@@ -28,7 +28,7 @@
             set;
         }
 
-        [Option(ShortName: 'o',
+        [OptionParameter(ShortName: 'o',
                 LongName: "outputPath")]
         [Help("Indicates the folder that will contain the generated class library [Default: ./OutputProtocol]")]
         public string OutputPath
@@ -37,7 +37,7 @@
             set;
         }
 
-        [Option(ShortName: 'p',
+        [OptionParameter(ShortName: 'p',
                 LongName: "protocol-path")]
         [Help("Indicates the path to the Chrome Debugging Protocol JSON file to use. [Default: chrome-debugging-protocol.json]")]
         public string ProtocolPath
@@ -46,7 +46,7 @@
             set;
         }
 
-        [Option(ShortName: 's',
+        [OptionParameter(ShortName: 's',
                 LongName: "settings")]
         [Help("Indicates the path to the code generation settings file. [Default: ./Templates/settings.json]")]
         public string Settings

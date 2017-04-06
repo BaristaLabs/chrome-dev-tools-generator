@@ -44,16 +44,6 @@
         }
 
         /// <summary>
-        /// Gets or sets the absolute path to the folder where code files should be produced.
-        /// </summary>
-        [JsonProperty("outputPath")]
-        public string OutputPath
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Gets or sets the root namespace of generated classes.
         /// </summary>
         [JsonProperty("rootNamespace")]

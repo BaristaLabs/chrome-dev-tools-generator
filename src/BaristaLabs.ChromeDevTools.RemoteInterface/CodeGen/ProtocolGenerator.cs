@@ -35,7 +35,7 @@
             {
                 var includeCodeGenerator = TemplatesManager.GetGeneratorForTemplate(include.Key);
                 var includeCodeResult = includeCodeGenerator.Render(includeData);
-                result.Add($"{Settings.OutputPath}\\{include.Value}", includeCodeResult);
+                result.Add(include.Value, includeCodeResult);
             }
 
             GenerateCode(protocolDefinition)

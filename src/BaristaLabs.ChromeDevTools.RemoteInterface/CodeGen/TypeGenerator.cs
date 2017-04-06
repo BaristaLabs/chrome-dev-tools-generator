@@ -5,6 +5,7 @@
     using Mustache;
     using System;
     using System.Collections.Generic;
+    using System.IO;
 
     public sealed class TypeGenerator : CodeGeneratorBase<TypeDefinition>
     {
@@ -54,7 +55,7 @@
                 rootNamespace = Settings.RootNamespace,
             });
 
-            result.Add($"{Settings.OutputPath}\\{options.domain.Name}\\{className}.cs", codeResult);
+            result.Add(Path.Combine(options.domain.Name, $"{className}.cs"), codeResult);
 
             return result;
         }

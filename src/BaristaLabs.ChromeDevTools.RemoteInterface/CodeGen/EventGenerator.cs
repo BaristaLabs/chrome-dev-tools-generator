@@ -4,6 +4,7 @@
     using Humanizer;
     using System;
     using System.Collections.Generic;
+    using System.IO;
 
     public sealed class EventGenerator : CodeGeneratorBase<EventDefinition>
     {
@@ -28,7 +29,7 @@
                 rootNamespace = Settings.RootNamespace,
             });
 
-            result.Add($"{Settings.OutputPath}\\{options.domain.Name}\\{className}Command.cs", codeResult);
+            result.Add(Path.Combine(options.domain.Name, $"{className}Command.cs"), codeResult);
 
             return result;
         }
