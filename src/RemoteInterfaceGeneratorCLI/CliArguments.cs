@@ -8,16 +8,15 @@
         private const string DefaultChromeDebuggingProtocolPath = "chrome-debugging-protocol.json";
 
         private const string DefaultOutputPath = "./OutputProtocol";
-        private const string DefaultTemplatesPath = "./Templates";
+        private const string DefaultSettingsPath = "./Templates/settings.json";
         private const string DefaultRootNamespace = "BaristaLabs.ChromeDevTools";
 
         public CliArguments()
             : base("RemoteInterfaceCLI")
         {
             ProtocolPath = DefaultChromeDebuggingProtocolPath;
-            TemplatesPath = DefaultTemplatesPath;
+            Settings = DefaultSettingsPath;
             OutputPath = DefaultOutputPath;
-            RootNamespace = DefaultRootNamespace;
         }
 
         [Option(ShortName: 'f',
@@ -47,19 +46,10 @@
             set;
         }
 
-        [Option(ShortName: 'n',
-                LongName: "namespace")]
-        [Help("Indicates the root namespace that the generated classes will be generated in [Default: BaristaLabs.ChromeDevTools]")]
-        public string RootNamespace
-        {
-            get;
-            set;
-        }
-
-        [Option(ShortName: 't',
-                LongName: "template-path")]
-        [Help("Indicates the path to the code generation templates. [Default: ./Templates]")]
-        public string TemplatesPath
+        [Option(ShortName: 's',
+                LongName: "settings")]
+        [Help("Indicates the path to the code generation settings file. [Default: ./Templates/settings.json]")]
+        public string Settings
         {
             get;
             set;

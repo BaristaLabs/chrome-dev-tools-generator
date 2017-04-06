@@ -1,6 +1,6 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition
 {
-    using BaristaLabs.ChromeDevTools.RemoteInterface.Generator;
+    using BaristaLabs.ChromeDevTools.RemoteInterface.CodeGen;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;

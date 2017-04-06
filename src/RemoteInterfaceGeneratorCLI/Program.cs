@@ -1,7 +1,7 @@
 ﻿namespace RemoteInterfaceGeneratorCLI
 {
     using BaristaLabs.ChromeDevTools;
-    using BaristaLabs.ChromeDevTools.RemoteInterface.Generator;
+    using BaristaLabs.ChromeDevTools.RemoteInterface.CodeGen;
     using BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition;
     using EntryPoint;
     using Newtonsoft.Json;
@@ -59,20 +59,13 @@
 
             var directoryInfo = Directory.CreateDirectory(args.OutputPath);
 
-            if (!Directory.Exists(args.TemplatesPath))
-                throw new FileNotFoundException($"The specified templates path ({args.TemplatesPath}) could not be found. Please check that the templates path exists and is populated with templates.");
-
-            var codeFiles = protocolDefinition.GenerateCode(new CodeGenerationSettings()
-            {
-                OutputPath = args.OutputPath,
-                RootNamespace = args.RootNamespace,
-                TemplatesPath = args.TemplatesPath
-            }, null);
+            var codeFiles = ProtocolGenerator.Generate(args.Settings, protocolDefinition);
 
             foreach(var codeFile in codeFiles)
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(codeFile.Key));
-                File.WriteAllText(codeFile.Key, codeFile.Value);
+                var targetFilePath = Path.GetFullPath($"{args.OutputPath}{codeFile.Key}");
+                Directory.CreateDirectory(Path.GetDirectoryName(targetFilePath));
+                File.WriteAllText(targetFilePath, codeFile.Value);
             }
 
             //Completed.

@@ -1,6 +1,5 @@
 ﻿{
   "include": {
     "project.mustache": "remoteinterface.csproj"
-
   }
 }
