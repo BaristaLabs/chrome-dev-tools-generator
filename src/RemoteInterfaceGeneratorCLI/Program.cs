@@ -15,7 +15,7 @@
 
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             var cliArguments = Cli.Parse<CliArguments>(args);
 
@@ -47,7 +47,24 @@
             Console.WriteLine("Generating protocol definition project...");
             if (Directory.Exists(cliArguments.OutputPath))
             {
-                Directory.Delete(cliArguments.OutputPath, true);
+                if (cliArguments.ForceOverwrite)
+                {
+                    Directory.Delete(cliArguments.OutputPath, true);
+                }
+                else
+                {
+                    Console.Write($"{Path.GetFullPath(cliArguments.OutputPath)} will be overwritten. Confirm y/n:");
+                    var confirmation = Console.ReadKey();
+                    if (confirmation.Key == ConsoleKey.Y)
+                    {
+                        Directory.Delete(cliArguments.OutputPath, true);
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                    Console.WriteLine();
+                }
             }
 
             var directoryInfo = Directory.CreateDirectory(cliArguments.OutputPath);
@@ -64,6 +81,7 @@
 
             //Completed.
             Console.WriteLine("All done!");
+            return 0;
         }
 
         /// <summary>

@@ -28,6 +28,14 @@
             set;
         }
 
+        [Option("force")]
+        [Help("Forces the output directory to be overwritten")]
+        public bool ForceOverwrite
+        {
+            get;
+            set;
+        }
+
         [OptionParameter(ShortName: 'o',
                 LongName: "outputPath")]
         [Help("Indicates the folder that will contain the generated class library [Default: ./OutputProtocol]")]

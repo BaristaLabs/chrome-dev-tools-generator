@@ -1,7 +1,8 @@
 {
   "profiles": {
     "RemoteInterfaceCLI": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "-o \"c:\\\\projects\\\\GeneratedChromeDevTools\" --force"
     }
   }
 }
