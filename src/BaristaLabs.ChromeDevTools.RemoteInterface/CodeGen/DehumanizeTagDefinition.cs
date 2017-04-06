@@ -30,7 +30,14 @@
 
         public override string ConsolidateWriter(TextWriter writer, Dictionary<string, object> arguments)
         {
-            return writer.ToString().Dehumanize();
+            var value = writer.ToString();
+            //Some overrides for values that start with '-' -- this fixes two instances in Runtime.UnserializableValue
+            if (value.StartsWith("-"))
+            {
+                return $"Negative{value.Dehumanize()}";
+            }
+
+            return value.Dehumanize();
         }
     }
 }

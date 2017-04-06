@@ -62,37 +62,53 @@
             if (String.IsNullOrWhiteSpace(type))
                 type = typeDefinition.TypeReference;
 
+            string mappedType = null;
             if (type.Contains(".") && knownTypes.ContainsKey(type))
             {
                 var typeInfo = knownTypes[type];
                 if (typeInfo.IsPrimitive)
                     return typeInfo.TypeName;
-                return $"{typeInfo.Namespace}.{typeInfo.TypeName}";
+                mappedType = $"{typeInfo.Namespace}.{typeInfo.TypeName}";
             }
 
-            var fullyQualifiedTypeName = $"{domainDefinition.Name}.{type}";
-
-            if (knownTypes.ContainsKey(fullyQualifiedTypeName))
-                return knownTypes[fullyQualifiedTypeName].TypeName;
-
-            switch (type)
+            if (mappedType == null)
             {
-                case "number":
-                    return "double";
-                case "integer":
-                    return "long";
-                case "boolean":
-                    return "bool";
-                case "string":
-                    return "string";
-                case "object":
-                case "any":
-                    return "object";
-                case "array":
-                    return GetTypeMappingForType(typeDefinition.Items, domainDefinition, knownTypes, true);
-                default:
-                    throw new InvalidOperationException($"Unmapped data type: {type}");
+                var fullyQualifiedTypeName = $"{domainDefinition.Name}.{type}";
+
+                if (knownTypes.ContainsKey(fullyQualifiedTypeName))
+                    mappedType = knownTypes[fullyQualifiedTypeName].TypeName;
             }
+
+            
+            if (mappedType == null)
+            {
+                switch (type)
+                {
+                    case "number":
+                        mappedType = "double";
+                        break;
+                    case "integer":
+                        mappedType = "long";
+                        break;
+                    case "boolean":
+                        mappedType = "bool";
+                        break;
+                    case "string":
+                        mappedType = "string";
+                        break;
+                    case "object":
+                    case "any":
+                        mappedType = "object";
+                        break;
+                    case "array":
+                        mappedType = GetTypeMappingForType(typeDefinition.Items, domainDefinition, knownTypes, true);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unmapped data type: {type}");
+                }
+            }
+
+            return mappedType + (isArray ? "[]" : String.Empty);
         }
     }
 }

@@ -95,10 +95,22 @@
                             if (type.Items == null || String.IsNullOrWhiteSpace(type.Items.Type))
                                 throw new NotImplementedException("Did not expect a top-level domain array type to specify a TypeReference");
 
+                            string itemType;
+                            switch(type.Items.Type)
+                            {
+                                case "string":
+                                    itemType = "string";
+                                    break;
+                                case "number":
+                                    itemType = "double";
+                                    break;
+                                default:
+                                    throw new NotImplementedException($"Did not expect a top-level domain array time to specify items of type {type.Items.Type}");
+                            }
                             typeInfo = new TypeInfo
                             {
                                 IsPrimitive = true,
-                                TypeName = $"{type.Items.Type}[]"
+                                TypeName = $"{itemType}[]"
                             };
                             break;
                         case "number":
