@@ -6,9 +6,10 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
     <PackageReference Include="Mustache" Version="1.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.1" />
-    <PackageReference Include="NJsonSchema" Version="8.25.6298.25721" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+    <PackageReference Include="NJsonSchema" Version="8.30.6304.31883" />
     <PackageReference Include="WebSocket4Net" Version="0.15.0-beta6" />
   </ItemGroup>
 

@@ -2,7 +2,7 @@
 {
     using Newtonsoft.Json;
 
-    public abstract class ProtocolDefinitionItem
+    public abstract class ProtocolDefinitionItem : IDefinition
     {
 
         [JsonProperty(PropertyName = "deprecated")]

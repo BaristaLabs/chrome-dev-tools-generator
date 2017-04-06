@@ -7,7 +7,7 @@
     using System.Collections.ObjectModel;
     using System.Linq;
 
-    public sealed class DomainDefinition : ProtocolDefinitionItem, ICodeGenerator
+    public sealed class DomainDefinition : ProtocolDefinitionItem
     {
         public DomainDefinition()
         {
@@ -51,34 +51,6 @@
         {
             get;
             set;
-        }
-
-        public IDictionary<string, string> GenerateCode(CodeGenerationSettings settings, dynamic options)
-        {
-            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var type in Types)
-            {
-                type.GenerateCode(settings, new { domain = this, knownTypes = options.knownTypes })
-                    .ToList()
-                    .ForEach(x => result.Add(x.Key, x.Value));
-            }
-
-            foreach (var @event in Events)
-            {
-                @event.GenerateCode(settings, new { domain = this, knownTypes = options.knownTypes })
-                    .ToList()
-                    .ForEach(x => result.Add(x.Key, x.Value));
-            }
-
-            foreach (var command in Commands)
-            {
-                command.GenerateCode(settings, new { domain = this, knownTypes = options.knownTypes })
-                    .ToList()
-                    .ForEach(x => result.Add(x.Key, x.Value));
-            }
-
-            return result;
         }
     }
 }

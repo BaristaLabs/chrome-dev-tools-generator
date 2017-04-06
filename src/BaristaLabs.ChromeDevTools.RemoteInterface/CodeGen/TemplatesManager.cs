@@ -8,31 +8,49 @@
     /// <summary>
     /// Represents a class that manages templates and their associated generators.
     /// </summary>
-    public static class TemplatesManager
+    public sealed class TemplatesManager
     {
-        private static IDictionary<string, Generator> s_templateGenerators = new Dictionary<string, Generator>(StringComparer.OrdinalIgnoreCase);
+        private readonly IDictionary<string, Generator> m_templateGenerators = new Dictionary<string, Generator>(StringComparer.OrdinalIgnoreCase);
+        private readonly CodeGenerationSettings m_settings;
+
+        /// <summary>
+        /// Gets the code generation settings associated with the protocol generator
+        /// </summary>
+        public CodeGenerationSettings Settings
+        {
+            get { return m_settings; }
+        }
+
+        public TemplatesManager(CodeGenerationSettings settings)
+        {
+            m_settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        }
 
         /// <summary>
         /// Returns a generator singleton for the specified template path.
         /// </summary>
         /// <param name="templatePath"></param>
         /// <returns></returns>
-        public static Generator GetGeneratorForTemplate(string templatePath)
+        public Generator GetGeneratorForTemplate(string templatePath)
         {
-            if (s_templateGenerators.ContainsKey(templatePath))
-                return s_templateGenerators[templatePath];
+            if (m_templateGenerators.ContainsKey(templatePath))
+                return m_templateGenerators[templatePath];
 
-            if (!File.Exists(templatePath))
-                throw new FileNotFoundException($"Unable to locate a template at {templatePath} - please ensure that a template file exists at this location.");
+            var targetTemplate = templatePath;
+            if (!Path.IsPathRooted(targetTemplate))
+                targetTemplate = Path.Combine(Settings.TemplatesPath, targetTemplate);
 
-            var templateContents = File.ReadAllText(templatePath);
+            if (!File.Exists(targetTemplate))
+                throw new FileNotFoundException($"Unable to locate a template at {targetTemplate} - please ensure that a template file exists at this location.");
+
+            var templateContents = File.ReadAllText(targetTemplate);
 
             var compiler = new FormatCompiler() { RemoveNewLines = false };
             compiler.RegisterTag(new DehumanizeTagDefinition(), true);
             compiler.RegisterTag(new TypeMapTagDefinition(), true);
 
             var generator = compiler.Compile(templateContents);
-            s_templateGenerators.Add(templatePath, generator);
+            m_templateGenerators.Add(templatePath, generator);
             return generator;
         }
     }

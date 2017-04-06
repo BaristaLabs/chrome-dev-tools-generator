@@ -16,6 +16,7 @@
             IncludeDeprecatedDomains = true;
             RootNamespace = "BaristaLabs.ChromeDevTools";
             Templates = new CodeGenerationTemplateSettings();
+            TemplatesPath = "Templates";
             UsingStatements = new List<string>()
             {
                 "System"
