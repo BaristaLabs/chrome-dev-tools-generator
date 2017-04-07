@@ -1,5 +1,7 @@
 ﻿{
   "include": {
-    "project.mustache": "ChromeRemoteInterface.csproj"
+    "project.mustache": "ChromeRemoteInterface.csproj",
+    "ChromeSession.mustache": "ChromeSession.cs",
+    "ICommand.mustache": "ICommand.cs"
   }
 }

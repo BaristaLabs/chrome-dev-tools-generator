@@ -6,6 +6,12 @@
 
     public static class IServiceProviderExtensions
     {
+        /// <summary>
+        /// Adds a pre-defined set of code generator services to provide Chrome Remote Interface generation.
+        /// </summary>
+        /// <param name="serviceCollection"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         public static IServiceCollection AddCodeGenerationServices(this IServiceCollection serviceCollection, CodeGenerationSettings settings)
         {
             if (settings == null)

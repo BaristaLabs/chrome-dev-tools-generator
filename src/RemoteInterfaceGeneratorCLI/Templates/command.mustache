@@ -1,10 +1,20 @@
 ﻿namespace {{rootNamespace}}.{{domain.Name}}
 {
+    using Newtonsoft.Json;
+
     /// <summary>
     /// {{command.Description}}
     /// </summary>
-    public sealed class {{className}}Command
+    public sealed class {{className}}Command : ICommand<{{className}}CommandResponse>
     {
+        private const string ChromeRemoteInterface_CommandName = "{{domain.Name}}.{{command.Name}}";
+        
+        [JsonIgnore]
+        public string CommandName
+        {
+            get { return ChromeRemoteInterface_CommandName; }
+        }
+
     {{#each command.Parameters}}
         {{#if Description}}
         /// <summary>
@@ -15,6 +25,28 @@
         /// Gets or sets the {{Name}}
         /// </summary>
         {{/if}}
+        [JsonProperty("{{Name}}")]
+        public {{#typemap domain this knownTypes}}{{Type}}{{/typemap}} {{#dehumanize}}{{Name}}{{/dehumanize}}
+        {
+            get;
+            set;
+        }
+    {{/each}}
+    }
+
+    public sealed class {{className}}CommandResponse : ICommandResponse
+    {
+    {{#each command.Returns}}
+        {{#if Description}}
+        /// <summary>
+        /// {{Description}}
+        ///</summary>
+        {{#else}}
+        /// <summary>
+        /// Gets or sets the {{Name}}
+        /// </summary>
+        {{/if}}
+        [JsonProperty("{{Name}}")]
         public {{#typemap domain this knownTypes}}{{Type}}{{/typemap}} {{#dehumanize}}{{Name}}{{/dehumanize}}
         {
             get;
