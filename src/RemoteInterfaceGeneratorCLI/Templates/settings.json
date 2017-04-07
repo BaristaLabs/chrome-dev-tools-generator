@@ -2,6 +2,7 @@
   "include": {
     "project.mustache": "BaristaLabs.ChromeDevTools.csproj",
     "ChromeSession.mustache": "ChromeSession.cs",
+    "CommandResponseException.mustache": "CommandResponseException.cs",
     "ICommand.mustache": "ICommand.cs"
   }
 }
