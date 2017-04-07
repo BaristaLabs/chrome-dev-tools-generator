@@ -12,6 +12,7 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
+    using System.Text;
 
     class Program
     {
@@ -32,6 +33,7 @@
                 .BuildServiceProvider();
 
             //Get the protocol Data.
+            Console.WriteLine("Loading protocol definition...");
             var protocolDefinitionData = GetProtocolDefinitionData(cliArguments).GetAwaiter().GetResult();
 
             //Validate that the protocol data matches our current class object.
@@ -43,40 +45,39 @@
             var protocolDefinition = protocolDefinitionData.ToObject<ProtocolDefinition>(new JsonSerializer() { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
 
             //Begin the code generation process.
-            //Delete the output folder if it exists.
-            Console.WriteLine("Generating protocol definition project...");
-            if (Directory.Exists(cliArguments.OutputPath))
+            Console.WriteLine("Generating protocol definition code files...");
+            var protocolGenerator = serviceProvider.GetRequiredService<ICodeGenerator<ProtocolDefinition>>();
+            var codeFiles = protocolGenerator.GenerateCode(protocolDefinition, null);
+
+            //Delete the output folder if force is specified and it exists...
+            Console.WriteLine("Writing generated code files...");
+            if (Directory.Exists(cliArguments.OutputPath) && cliArguments.ForceOverwrite)
             {
-                if (cliArguments.ForceOverwrite)
-                {
-                    Directory.Delete(cliArguments.OutputPath, true);
-                }
-                else
-                {
-                    Console.Write($"{Path.GetFullPath(cliArguments.OutputPath)} will be overwritten. Confirm y/n:");
-                    var confirmation = Console.ReadKey();
-                    if (confirmation.Key == ConsoleKey.Y)
-                    {
-                        Directory.Delete(cliArguments.OutputPath, true);
-                    }
-                    else
-                    {
-                        return -1;
-                    }
-                    Console.WriteLine();
-                }
+                Console.WriteLine("Generating protocol definition project...");
+                Directory.Delete(cliArguments.OutputPath, true);
             }
 
             var directoryInfo = Directory.CreateDirectory(cliArguments.OutputPath);
 
-            var protocolGenerator = serviceProvider.GetRequiredService<ICodeGenerator<ProtocolDefinition>>();
-            var codeFiles = protocolGenerator.GenerateCode(protocolDefinition, null);
-
+            var sha1 = System.Security.Cryptography.SHA1.Create();
             foreach (var codeFile in codeFiles)
             {
                 var targetFilePath = Path.GetFullPath(Path.Combine(cliArguments.OutputPath, codeFile.Key));
                 Directory.CreateDirectory(Path.GetDirectoryName(targetFilePath));
-                File.WriteAllText(targetFilePath, codeFile.Value);
+                //Only update the file if the SHA1 hashes don't match
+                if (File.Exists(targetFilePath))
+                {
+                    var targetFileHash = sha1.ComputeHash(File.ReadAllBytes(targetFilePath));
+                    var codeFileHash = sha1.ComputeHash(Encoding.UTF8.GetBytes(codeFile.Value));
+                    if (String.Compare(Convert.ToBase64String(targetFileHash), Convert.ToBase64String(codeFileHash)) != 0)
+                    {
+                        File.WriteAllText(targetFilePath, codeFile.Value);
+                    }
+                }
+                else
+                {
+                    File.WriteAllText(targetFilePath, codeFile.Value);
+                }
             }
 
             //Completed.

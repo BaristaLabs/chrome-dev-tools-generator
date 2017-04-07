@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="EntryPoint" Version="1.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
