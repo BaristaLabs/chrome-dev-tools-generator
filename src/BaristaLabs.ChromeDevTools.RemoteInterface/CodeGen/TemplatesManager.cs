@@ -31,8 +31,9 @@
         /// </summary>
         /// <param name="templatePath"></param>
         /// <returns></returns>
-        public Generator GetGeneratorForTemplate(string templatePath)
+        public Generator GetGeneratorForTemplate(CodeGenerationTemplateSettings templateSettings)
         {
+            var templatePath = templateSettings.TemplatePath;
             if (m_templateGenerators.ContainsKey(templatePath))
                 return m_templateGenerators[templatePath];
 
@@ -45,7 +46,7 @@
 
             var templateContents = File.ReadAllText(targetTemplate);
 
-            var compiler = new FormatCompiler() { RemoveNewLines = false };
+            var compiler = new FormatCompiler() { RemoveNewLines = templateSettings.RemoveNewLines };
             compiler.RegisterTag(new DehumanizeTagDefinition(), true);
             compiler.RegisterTag(new TypeMapTagDefinition(), true);
 

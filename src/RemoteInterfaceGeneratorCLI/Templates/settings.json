@@ -1,11 +1,30 @@
 ﻿{
-  "include": {
-    "project.mustache": "BaristaLabs.ChromeDevTools.Runtime.csproj",
-    "ChromeSession.mustache": "ChromeSession.cs",
-    "CommandResponseException.mustache": "CommandResponseException.cs",
-    "ICommand.mustache": "ICommand.cs",
-    "IEvent.mustache": "IEvent.cs",
-    "EventTypeMap.mustache": "EventTypeMap.cs"
-  },
+  "include": [
+    {
+      "templatePath": "project.mustache",
+      "outputPath": "BaristaLabs.ChromeDevTools.Runtime.csproj"
+    },
+    {
+      "templatePath": "ChromeSession.mustache",
+      "outputPath": "ChromeSession.cs"
+    },
+    {
+      "templatePath": "CommandResponseException.mustache",
+      "outputPath": "CommandResponseException.cs"
+    },
+    {
+      "templatePath": "EventTypeMap.mustache",
+      "outputPath": "EventTypeMap.cs",
+      "removeNewLines": true
+    },
+    {
+      "templatePath": "ICommand.mustache",
+      "outputPath": "ICommand.cs"
+    },
+    {
+      "templatePath": "IEvent.mustache",
+      "outputPath": "IEvent.cs"
+    }
+  ],
   "rootNamespace": "BaristaLabs.ChromeDevTools.Runtime"
 }

@@ -2,44 +2,30 @@
 {
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Defines settings around templates
+    /// </summary>
     public class CodeGenerationTemplateSettings
     {
-        public CodeGenerationTemplateSettings()
-        {
-            //Set Defaults;
-            CommandTemplate = "command.mustache";
-            EventTemplate = "event.mustache";
-            TypeObjectTemplate = "type-object.mustache";
-            TypeEnumTemplate = "type-enum.mustache";
-        }
-
-        [JsonProperty("commandTemplate")]
-        public string CommandTemplate
+        [JsonProperty("templatePath")]
+        public string TemplatePath
         {
             get;
             set;
         }
 
-        [JsonProperty("eventTemplate")]
-        public string EventTemplate
+        [JsonProperty("outputPath")]
+        public string OutputPath
         {
             get;
             set;
         }
 
-        [JsonProperty("typeObjectTemplate")]
-        public string TypeObjectTemplate
+        [JsonProperty("removeNewLines")]
+        public bool RemoveNewLines
         {
             get;
             set;
         }
-
-        [JsonProperty("typeEnumTemplate")]
-        public string TypeEnumTemplate
-        {
-            get;
-            set;
-        }
-
     }
 }

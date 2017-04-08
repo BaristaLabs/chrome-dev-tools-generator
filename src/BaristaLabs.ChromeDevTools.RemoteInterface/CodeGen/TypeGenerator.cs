@@ -37,10 +37,10 @@
             switch (typeDefinition.Type)
             {
                 case "object":
-                    typeGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.Templates.TypeObjectTemplate);
+                    typeGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.DefinitionTemplates.TypeObjectTemplate);
                     break;
                 case "string":
-                    typeGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.Templates.TypeEnumTemplate);
+                    typeGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.DefinitionTemplates.TypeEnumTemplate);
                     break;
                 default:
                     throw new InvalidOperationException($"Unsupported Type Definition Type: {typeDefinition.Type}");

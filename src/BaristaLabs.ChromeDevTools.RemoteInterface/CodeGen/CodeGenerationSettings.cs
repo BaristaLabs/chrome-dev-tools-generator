@@ -12,10 +12,10 @@
         public CodeGenerationSettings()
         {
             //Set defaults
-            Include = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            Include = new List<CodeGenerationTemplateSettings>();
             IncludeDeprecatedDomains = true;
             RootNamespace = "BaristaLabs.ChromeDevTools";
-            Templates = new CodeGenerationTemplateSettings();
+            DefinitionTemplates = new CodeGenerationDefinitionTemplateSettings();
             TemplatesPath = "Templates";
             UsingStatements = new List<string>()
             {
@@ -27,7 +27,7 @@
         /// Collection of templates that will be parsed and output in the target folder.
         /// </summary>
         [JsonProperty("include")]
-        public IDictionary<string, string> Include
+        public ICollection<CodeGenerationTemplateSettings> Include
         {
             get;
             set;
@@ -53,8 +53,8 @@
             set;
         }
 
-        [JsonProperty("templates")]
-        public CodeGenerationTemplateSettings Templates
+        [JsonProperty("definitionTemplates")]
+        public CodeGenerationDefinitionTemplateSettings DefinitionTemplates
         {
             get;
             set;

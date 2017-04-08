@@ -17,7 +17,7 @@
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            var commandGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.Templates.CommandTemplate);
+            var commandGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.DefinitionTemplates.CommandTemplate);
 
             var className = commandDefinition.Name.Dehumanize();
             string codeResult = commandGenerator.Render(new

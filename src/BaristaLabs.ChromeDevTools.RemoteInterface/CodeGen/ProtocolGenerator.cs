@@ -67,6 +67,7 @@
             //Get typeinfos as a dictionary.
             var types = GetTypesInDomain(domains);
 
+            //Create an object that contains information that include templates can use.
             var includeData = new {
                 rootNamespace = Settings.RootNamespace,
                 domains = domains,
@@ -77,13 +78,15 @@
 
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
+            //Generate include files from templates.
             foreach (var include in Settings.Include)
             {
-                var includeCodeGenerator = TemplatesManager.GetGeneratorForTemplate(include.Key);
+                var includeCodeGenerator = TemplatesManager.GetGeneratorForTemplate(include);
                 var includeCodeResult = includeCodeGenerator.Render(includeData);
-                result.Add(include.Value, includeCodeResult);
+                result.Add(include.OutputPath, includeCodeResult);
             }
 
+            //Generate code for each domain, type, command, event from their respective templates.
             GenerateCode(domains, types)
                 .ToList()
                 .ForEach(x => result.Add(x.Key, x.Value));

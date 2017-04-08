@@ -108,11 +108,10 @@
                 typeof(TEvent),
                 (type) =>
                 {
-                    var eventInfoAttribute = typeof(TEvent).GetTypeInfo().GetCustomAttribute<EventAttribute>();
-                    if (eventInfoAttribute == null)
-                        throw new InvalidOperationException("Expected a class that implements IEvent to contain an EventInfoAttribute");
+                    if (!EventTypeMap.TryGetMethodNameForType<TEvent>(out string methodName))
+                        throw new InvalidOperationException($"Type {typeof(TEvent)} does not correspond to a known event type.");
 
-                    return eventInfoAttribute.EventName;
+                    return methodName;
                 });
             
             var callbackWrapper = new Action<object>(obj => eventCallback((TEvent)obj));

@@ -17,7 +17,7 @@
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            var eventGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.Templates.EventTemplate);
+            var eventGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.DefinitionTemplates.EventTemplate);
 
             var className = eventDefinition.Name.Dehumanize();
             string codeResult = eventGenerator.Render(new
