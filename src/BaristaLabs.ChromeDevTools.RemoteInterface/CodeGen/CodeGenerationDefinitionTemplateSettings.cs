@@ -9,28 +9,28 @@
             //Set Defaults;
             CommandTemplate = new CodeGenerationTemplateSettings {
                 TemplatePath = "command.mustache",
-                OutputPath = "",
+                OutputPath = "{{domainName}}\\{{className}}Command.cs",
                 RemoveNewLines = false
             };
 
             EventTemplate = new CodeGenerationTemplateSettings
             {
                 TemplatePath = "event.mustache",
-                OutputPath = "",
+                OutputPath = "{{domainName}}\\{{className}}Event.cs",
                 RemoveNewLines = false
             };
 
             TypeObjectTemplate = new CodeGenerationTemplateSettings
             {
                 TemplatePath = "type-object.mustache",
-                OutputPath = "",
+                OutputPath = "{{domainName}}\\{{className}}.cs",
                 RemoveNewLines = false
             };
 
             TypeEnumTemplate = new CodeGenerationTemplateSettings
             {
                 TemplatePath = "type-enum.mustache",
-                OutputPath = "",
+                OutputPath = "{{domainName}}\\{{className}}.cs",
                 RemoveNewLines = false
             };
         }

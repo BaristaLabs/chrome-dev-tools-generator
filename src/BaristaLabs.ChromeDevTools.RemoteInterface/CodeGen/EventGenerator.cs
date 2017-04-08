@@ -13,23 +13,25 @@
         {
         }
 
-        public override IDictionary<string, string> GenerateCode(EventDefinition eventDefinition, dynamic options)
+        public override IDictionary<string, string> GenerateCode(EventDefinition eventDefinition, CodeGeneratorContext context)
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             var eventGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.DefinitionTemplates.EventTemplate);
 
             var className = eventDefinition.Name.Dehumanize();
+
             string codeResult = eventGenerator.Render(new
             {
                 @event = eventDefinition,
                 className = className,
-                domain = options.domain,
-                knownTypes = options.knownTypes,
+                domain = context.Domain,
                 rootNamespace = Settings.RootNamespace,
+                context = context
             });
 
-            result.Add(Path.Combine(options.domain.Name, $"{className}Event.cs"), codeResult);
+            var outputPath = Utility.ReplaceTokensInPath(Settings.DefinitionTemplates.EventTemplate.OutputPath, className, context, Settings);
+            result.Add(outputPath, codeResult);
 
             return result;
         }

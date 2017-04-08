@@ -9,7 +9,7 @@
         /// <summary>
         /// {{Description}}
         ///</summary>
-        public {{#typemap domain this knownTypes}}{{Type}}{{/typemap}} {{#dehumanize}}{{Name}}{{/dehumanize}}
+        public {{#typemap this context}}{{Type}}{{/typemap}} {{#dehumanize}}{{Name}}{{/dehumanize}}
         {
             get;
             set;

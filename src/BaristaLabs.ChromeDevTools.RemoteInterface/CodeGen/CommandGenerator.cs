@@ -13,7 +13,7 @@
         {
         }
 
-        public override IDictionary<string, string> GenerateCode(CommandDefinition commandDefinition, dynamic options)
+        public override IDictionary<string, string> GenerateCode(CommandDefinition commandDefinition, CodeGeneratorContext context)
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
@@ -24,12 +24,13 @@
             {
                 command = commandDefinition,
                 className = className,
-                domain = options.domain,
-                knownTypes = options.knownTypes,
+                domain = context.Domain,
                 rootNamespace = Settings.RootNamespace,
+                context = context
             });
 
-            result.Add(Path.Combine(options.domain.Name, $"{className}Command.cs"), codeResult);
+            var outputPath = Utility.ReplaceTokensInPath(Settings.DefinitionTemplates.CommandTemplate.OutputPath, className, context, Settings);
+            result.Add(outputPath, codeResult);
             return result;
         }
     }

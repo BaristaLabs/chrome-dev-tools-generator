@@ -14,48 +14,48 @@
         {
         }
 
-        public override IDictionary<string, string> GenerateCode(TypeDefinition typeDefinition, dynamic options)
+        public override IDictionary<string, string> GenerateCode(TypeDefinition typeDefinition, CodeGeneratorContext context)
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            var knownTypes = options.knownTypes as IDictionary<string, TypeInfo>;
-            if (knownTypes == null)
-                throw new InvalidOperationException("Expected knowntypes to be specified in options");
+            if (context.KnownTypes == null)
+                throw new InvalidOperationException("Expected knowntypes to be specified in context");
 
-            var domain = options.domain as DomainDefinition;
-            if (domain == null)
-                throw new InvalidOperationException("Expected domain to be specified in options");
+            if (context.Domain == null)
+                throw new InvalidOperationException("Expected domain to be specified in context");
 
-            var typeInfo = knownTypes[$"{domain.Name}.{typeDefinition.Id}"];
+            var typeInfo = context.KnownTypes[$"{context.Domain.Name}.{typeDefinition.Id}"];
             if (typeInfo.IsPrimitive)
                 return result;
 
-            var className = typeDefinition.Id.Dehumanize();
-            Generator typeGenerator;
-
             //Base the code generation template on the specified type definition type.
+            CodeGenerationTemplateSettings templateSettings;
             switch (typeDefinition.Type)
             {
                 case "object":
-                    typeGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.DefinitionTemplates.TypeObjectTemplate);
+                    templateSettings = Settings.DefinitionTemplates.TypeObjectTemplate;
                     break;
                 case "string":
-                    typeGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.DefinitionTemplates.TypeEnumTemplate);
+                    templateSettings = Settings.DefinitionTemplates.TypeEnumTemplate;
                     break;
                 default:
                     throw new InvalidOperationException($"Unsupported Type Definition Type: {typeDefinition.Type}");
             }
 
+            Generator typeGenerator = TemplatesManager.GetGeneratorForTemplate(templateSettings);
+
+            var className = typeDefinition.Id.Dehumanize();
             var codeResult = typeGenerator.Render(new
             {
                 type = typeDefinition,
                 className = className,
-                domain = domain,
-                knownTypes = options.knownTypes, //Setting this to the KnownTypes dictionary results in an exception in mustache -- constructor not found...
+                domain = context.Domain,
                 rootNamespace = Settings.RootNamespace,
+                context = context
             });
 
-            result.Add(Path.Combine(options.domain.Name, $"{className}.cs"), codeResult);
+            var outputPath = Utility.ReplaceTokensInPath(templateSettings.OutputPath, className, context, Settings);
+            result.Add(outputPath, codeResult);
 
             return result;
         }

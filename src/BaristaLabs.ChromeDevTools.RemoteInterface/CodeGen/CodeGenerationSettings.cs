@@ -1,7 +1,6 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.CodeGen
 {
     using Newtonsoft.Json;
-    using System;
     using System.Collections.Generic;
 
     /// <summary>

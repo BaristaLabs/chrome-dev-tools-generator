@@ -14,8 +14,8 @@
         /// Generates one or more code files for the specified IDefinition item
         /// </summary>
         /// <param name="item"></param>
-        /// <param name="options"></param>
+        /// <param name="context"></param>
         /// <returns></returns>
-        IDictionary<string, string> GenerateCode(T item, dynamic options);
+        IDictionary<string, string> GenerateCode(T item, CodeGeneratorContext context);
     }
 }

@@ -13,14 +13,14 @@
         {
         }
 
-        public override IDictionary<string, string> GenerateCode(DomainDefinition domainDefinition, dynamic options)
+        public override IDictionary<string, string> GenerateCode(DomainDefinition domainDefinition, CodeGeneratorContext context)
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             var typeGenerator = ServiceProvider.GetRequiredService<ICodeGenerator<TypeDefinition>>();
             foreach (var type in domainDefinition.Types)
             {
-                typeGenerator.GenerateCode(type, new { domain = domainDefinition, knownTypes = options.knownTypes })
+                typeGenerator.GenerateCode(type, context)
                     .ToList()
                     .ForEach(x => result.Add(x.Key, x.Value));
             }
@@ -28,7 +28,7 @@
             var eventGenerator = ServiceProvider.GetRequiredService<ICodeGenerator<EventDefinition>>();
             foreach (var @event in domainDefinition.Events)
             {
-                eventGenerator.GenerateCode(@event, new { domain = domainDefinition, knownTypes = options.knownTypes })
+                eventGenerator.GenerateCode(@event, context)
                     .ToList()
                     .ForEach(x => result.Add(x.Key, x.Value));
             }
@@ -36,7 +36,7 @@
             var commandGenerator = ServiceProvider.GetRequiredService<ICodeGenerator<CommandDefinition>>();
             foreach (var command in domainDefinition.Commands)
             {
-                commandGenerator.GenerateCode(command, new { domain = domainDefinition, knownTypes = options.knownTypes })
+                commandGenerator.GenerateCode(command, context)
                     .ToList()
                     .ForEach(x => result.Add(x.Key, x.Value));
             }

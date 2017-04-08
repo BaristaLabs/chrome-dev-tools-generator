@@ -18,7 +18,7 @@
         {
         }
 
-        public override IDictionary<string, string> GenerateCode(ProtocolDefinition protocolDefinition, dynamic options)
+        public override IDictionary<string, string> GenerateCode(ProtocolDefinition protocolDefinition, CodeGeneratorContext context)
         {
             if (String.IsNullOrWhiteSpace(Settings.TemplatesPath))
             {
@@ -94,9 +94,9 @@
             return result;
         }
 
-        private IDictionary<string, TypeInfo> GetTypesInDomain(ICollection<DomainDefinition> domains)
+        private Dictionary<string, TypeInfo> GetTypesInDomain(ICollection<DomainDefinition> domains)
         {
-            IDictionary<string, TypeInfo> knownTypes = new Dictionary<string, TypeInfo>(StringComparer.OrdinalIgnoreCase);
+            var knownTypes = new Dictionary<string, TypeInfo>(StringComparer.OrdinalIgnoreCase);
 
             //First pass - get all top-level types.
             foreach (var domain in domains)
@@ -176,7 +176,7 @@
             return knownTypes;
         }
 
-        private IDictionary<string, string> GenerateCode(ICollection<DomainDefinition> domains, IDictionary<string, TypeInfo> knownTypes)
+        private IDictionary<string, string> GenerateCode(ICollection<DomainDefinition> domains, Dictionary<string, TypeInfo> knownTypes)
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
@@ -185,7 +185,7 @@
             //Generate types/events/commands for all domains.
             foreach (var domain in domains)
             {
-                domainGenerator.GenerateCode(domain, new { knownTypes = knownTypes })
+                domainGenerator.GenerateCode(domain, new CodeGeneratorContext { Domain = domain, KnownTypes = knownTypes })
                     .ToList()
                     .ForEach(x => result.Add(x.Key, x.Value));
             }

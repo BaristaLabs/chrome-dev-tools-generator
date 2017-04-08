@@ -43,6 +43,6 @@
             m_templatesManager = new Lazy<TemplatesManager>(() => m_serviceProvider.GetRequiredService<TemplatesManager>());
         }
 
-        public abstract IDictionary<string, string> GenerateCode(T item, dynamic options);
+        public abstract IDictionary<string, string> GenerateCode(T item, CodeGeneratorContext context);
     }
 }

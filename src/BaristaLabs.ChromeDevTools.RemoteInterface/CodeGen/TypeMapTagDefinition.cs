@@ -27,9 +27,8 @@
         protected override IEnumerable<TagParameter> GetParameters()
         {
             return new TagParameter[] {
-                new TagParameter("DomainDefinition") { IsRequired = true },
                 new TagParameter("TypeDefinition") { IsRequired = true },
-                new TagParameter("KnownTypes") { IsRequired = false }
+                new TagParameter("Context") { IsRequired = true }
             };
         }
 
@@ -41,18 +40,15 @@
         public override string ConsolidateWriter(TextWriter writer, Dictionary<string, object> arguments)
         {
             var type = writer.ToString();
-
-            var domainDefinition = arguments["DomainDefinition"] as DomainDefinition;
-            if (domainDefinition == null)
-                throw new InvalidOperationException("Expected DomainDefinition argument to be non-null.");
-
             var typeDefinition = arguments["TypeDefinition"] as TypeDefinition;
             if (typeDefinition == null)
                 throw new InvalidOperationException("Expected TypeDefinition argument to be non-null.");
 
-            var knownTypes = arguments["KnownTypes"] as IDictionary<string, TypeInfo>;
-            
-            return GetTypeMappingForType(typeDefinition, domainDefinition, knownTypes);
+            var context = arguments["Context"] as CodeGeneratorContext;
+            if (context == null)
+                throw new InvalidOperationException("Expected context argument to be non-null.");
+
+            return GetTypeMappingForType(typeDefinition, context.Domain, context.KnownTypes);
         }
 
         private string GetTypeMappingForType(TypeDefinition typeDefinition, DomainDefinition domainDefinition, IDictionary<string, TypeInfo> knownTypes, bool isArray = false)
