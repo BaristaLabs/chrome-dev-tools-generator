@@ -1,29 +1,28 @@
 ﻿namespace {{rootNamespace}}
 {
-    using Newtonsoft.Json;
+    using System;
 
-    public sealed class ChromeSessionError
+    [Serializable]
+    public class CommandResponseException : Exception
     {
-
-        [JsonProperty("code")]
-        public string Code
+        public long Code
         {
             get;
             set;
         }
 
-        [JsonProperty("message")]
-        public string Message
+        public CommandResponseException()
         {
-            get;
-            set;
         }
 
-        [JsonProperty("data")]
-        public string Data
+        public CommandResponseException(string message)
+            : base(message)
         {
-            get;
-            set;
+        }
+
+        public CommandResponseException(string message, Exception innerException)
+            : base(message, innerException)
+        {
         }
     }
 }

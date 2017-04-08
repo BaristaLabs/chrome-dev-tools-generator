@@ -3,7 +3,8 @@
     /// <summary>
     /// {{event.Description}}
     /// </summary>
-    public sealed class {{className}}Event
+    [Event("{{domain.Name}}.{{event.Name}}")]
+    public sealed class {{className}}Event : IEvent
     {
     {{#each event.Parameters}}
         {{#if Description}}

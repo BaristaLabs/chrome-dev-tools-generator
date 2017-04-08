@@ -1,8 +1,10 @@
 ﻿{
   "include": {
-    "project.mustache": "BaristaLabs.ChromeDevTools.csproj",
+    "project.mustache": "BaristaLabs.ChromeDevTools.Runtime.csproj",
     "ChromeSession.mustache": "ChromeSession.cs",
     "CommandResponseException.mustache": "CommandResponseException.cs",
-    "ICommand.mustache": "ICommand.cs"
-  }
+    "ICommand.mustache": "ICommand.cs",
+    "IEvent.mustache": "IEvent.cs"
+  },
+  "rootNamespace": "BaristaLabs.ChromeDevTools.Runtime"
 }
