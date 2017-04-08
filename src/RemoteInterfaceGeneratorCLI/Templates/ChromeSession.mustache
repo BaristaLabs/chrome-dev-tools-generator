@@ -137,14 +137,17 @@
 
         private void RaiseEvent(string methodName, JToken eventData)
         {
-            //if (m_eventHandlers.TryGetValue(methodName, out ConcurrentBag<Action<Object>> bag))
-            //{
-            //    var typedEventData = eventData.ToObject(typeof(foo));
-            //    foreach (var callback in bag)
-            //    {
-            //        callback(typedEventData);
-            //    }
-            //}
+            if (m_eventHandlers.TryGetValue(methodName, out ConcurrentBag<Action<Object>> bag))
+            {
+                if (!EventTypeMap.TryGetTypeForMethodName(methodName, out Type eventType))
+                    throw new InvalidOperationException($"Unknown {methodName} does not correspond to a known event type.");
+
+                var typedEventData = eventData.ToObject(eventType);
+                foreach (var callback in bag)
+                {
+                    callback(typedEventData);
+                }
+            }
         }
 
         #region EventHandlers

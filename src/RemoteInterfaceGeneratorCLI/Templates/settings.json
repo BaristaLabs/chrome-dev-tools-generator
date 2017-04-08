@@ -4,7 +4,8 @@
     "ChromeSession.mustache": "ChromeSession.cs",
     "CommandResponseException.mustache": "CommandResponseException.cs",
     "ICommand.mustache": "ICommand.cs",
-    "IEvent.mustache": "IEvent.cs"
+    "IEvent.mustache": "IEvent.cs",
+    "EventTypeMap.mustache": "EventTypeMap.cs"
   },
   "rootNamespace": "BaristaLabs.ChromeDevTools.Runtime"
 }

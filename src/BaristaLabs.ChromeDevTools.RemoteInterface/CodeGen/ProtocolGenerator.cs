@@ -25,8 +25,54 @@
                 Settings.TemplatesPath = Path.GetDirectoryName(Settings.TemplatesPath);
             }
 
+            ICollection<DomainDefinition> domains;
+            if (Settings.IncludeDeprecatedDomains)
+                domains = protocolDefinition.Domains;
+            else
+                domains = protocolDefinition.Domains
+                    .Where(d => d.Deprecated == false)
+                    .ToList();
+
+            //Get commandinfos as an array.
+            ICollection<CommandInfo> commands = new List<CommandInfo>();
+
+            foreach (var domain in domains)
+            {
+                foreach (var command in domain.Commands)
+                {
+                    commands.Add(new CommandInfo
+                    {
+                        CommandName = $"{domain.Name}.{command.Name}",
+                        FullTypeName = $"{domain.Name.Dehumanize()}.{command.Name.Dehumanize()}Command",
+                        FullResponseTypeName = $"{domain.Name.Dehumanize()}.{command.Name.Dehumanize()}CommandResponse"
+                    });
+                }
+            }
+
+            //Get eventinfos as an array
+            ICollection<EventInfo> events = new List<EventInfo>();
+
+            foreach(var domain in domains)
+            {
+                foreach(var @event in domain.Events)
+                {
+                    events.Add(new EventInfo
+                    {
+                        EventName = $"{domain.Name}.{@event.Name}",
+                        FullTypeName = $"{domain.Name.Dehumanize()}.{@event.Name.Dehumanize()}Event"
+                    });
+                }
+            }
+
+            //Get typeinfos as a dictionary.
+            var types = GetTypesInDomain(domains);
+
             var includeData = new {
-                rootNamespace = Settings.RootNamespace
+                rootNamespace = Settings.RootNamespace,
+                domains = domains,
+                commmands = commands,
+                events = events,
+                types = types.Select(kvp => kvp.Value).ToList()
             };
 
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -38,26 +84,15 @@
                 result.Add(include.Value, includeCodeResult);
             }
 
-            GenerateCode(protocolDefinition)
+            GenerateCode(domains, types)
                 .ToList()
                 .ForEach(x => result.Add(x.Key, x.Value));
 
             return result;
         }
 
-
-        private IDictionary<string, string> GenerateCode(ProtocolDefinition protocolDefinition)
+        private IDictionary<string, TypeInfo> GetTypesInDomain(ICollection<DomainDefinition> domains)
         {
-            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-            ICollection<DomainDefinition> domains;
-            if (Settings.IncludeDeprecatedDomains)
-                domains = protocolDefinition.Domains;
-            else
-                domains = protocolDefinition.Domains
-                    .Where(d => d.Deprecated == false)
-                    .ToList();
-
             IDictionary<string, TypeInfo> knownTypes = new Dictionary<string, TypeInfo>(StringComparer.OrdinalIgnoreCase);
 
             //First pass - get all top-level types.
@@ -96,7 +131,7 @@
                                 throw new NotImplementedException("Did not expect a top-level domain array type to specify a TypeReference");
 
                             string itemType;
-                            switch(type.Items.Type)
+                            switch (type.Items.Type)
                             {
                                 case "string":
                                     itemType = "string";
@@ -134,6 +169,13 @@
                     knownTypes.Add($"{domain.Name}.{type.Id}", typeInfo);
                 }
             }
+
+            return knownTypes;
+        }
+
+        private IDictionary<string, string> GenerateCode(ICollection<DomainDefinition> domains, IDictionary<string, TypeInfo> knownTypes)
+        {
+            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             var domainGenerator = ServiceProvider.GetRequiredService<ICodeGenerator<DomainDefinition>>();
 
