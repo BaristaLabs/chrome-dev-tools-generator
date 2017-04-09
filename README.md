@@ -1,7 +1,7 @@
 # chrome-dev-tools
-Dot Net Core based implementation of the [Chrome Remote Interface](https://developer.chrome.com/devtools/docs/debugger-protocol)
+Dot Net Core based implementation of the [Chrome Debugger PRotocol](https://developer.chrome.com/devtools/docs/debugger-protocol)
  
-Some use cases for using the Chrome Remote Interface to automate Chrome are:
+Some use cases for using the Chrome Debugger Protocol to automate Chrome are:
  - Information Gathering - Use the web as a data source by creating structured data out of unstructured data
  - Testing - Ensure sites are up and behave according to a pre-determined notion
  - Automation - Do things like perform automated password resets, enter online contests, notify when sites change, etc...
@@ -13,7 +13,7 @@ The protocol itself is defined by Google via a JSON-based definition of a websoc
 A number of other Browsers have started implementing the Chrome Remote Interface, including Edge, Safari (iOS), Firefox and possibly more, which makes developing a common interface to one of these browsers highly attractive.
 
 
-This project is a .Net Core Project Generator which creates a .csproj and corresponding class files that provide the connection and a strongly-typed interface to allow one to develop applictions that use the Chrome Remote Interface.
+This project is a .Net Core Project Generator which creates a .csproj and corresponding class files that provide the connection and a strongly-typed interface to allow one to develop applictions that use the debugger protocol for fun and profit.
 
  ## Requirements:
 
