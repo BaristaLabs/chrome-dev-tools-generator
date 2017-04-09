@@ -5,8 +5,10 @@
     using Mustache;
     using System;
     using System.Collections.Generic;
-    using System.IO;
 
+    /// <summary>
+    /// Generates code for Type Definitions
+    /// </summary>
     public sealed class TypeGenerator : CodeGeneratorBase<TypeDefinition>
     {
         public TypeGenerator(IServiceProvider serviceProvider)

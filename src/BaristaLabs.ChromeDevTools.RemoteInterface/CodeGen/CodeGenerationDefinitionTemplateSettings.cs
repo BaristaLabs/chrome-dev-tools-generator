@@ -2,6 +2,9 @@
 {
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents settings around Definition templates.
+    /// </summary>
     public class CodeGenerationDefinitionTemplateSettings
     {
         public CodeGenerationDefinitionTemplateSettings()

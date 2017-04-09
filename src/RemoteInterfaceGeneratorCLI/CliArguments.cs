@@ -37,7 +37,7 @@
         }
 
         [OptionParameter(ShortName: 'o',
-                LongName: "outputPath")]
+                LongName: "output-path")]
         [Help("Indicates the folder that will contain the generated class library [Default: ./OutputProtocol]")]
         public string OutputPath
         {

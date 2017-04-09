@@ -3,6 +3,9 @@
     using BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Represents the current context of the code generator.
+    /// </summary>
     public sealed class CodeGeneratorContext
     {
         public DomainDefinition Domain

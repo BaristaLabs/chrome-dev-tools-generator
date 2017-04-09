@@ -4,6 +4,9 @@
     using Microsoft.Extensions.DependencyInjection;
     using System;
 
+    /// <summary>
+    /// Contains extensions for IServiceProvider.
+    /// </summary>
     public static class IServiceProviderExtensions
     {
         /// <summary>

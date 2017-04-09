@@ -4,8 +4,10 @@
     using Humanizer;
     using System;
     using System.Collections.Generic;
-    using System.IO;
 
+    /// <summary>
+    /// Generates code for Command Definitions
+    /// </summary>
     public sealed class CommandGenerator : CodeGeneratorBase<CommandDefinition>
     {
         public CommandGenerator(IServiceProvider serviceProvider)

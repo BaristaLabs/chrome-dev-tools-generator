@@ -5,6 +5,10 @@
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Represents a base implementation of a code generator.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class CodeGeneratorBase<T> : ICodeGenerator<T>
         where T : IDefinition
     {

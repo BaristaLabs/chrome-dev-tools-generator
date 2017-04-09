@@ -4,8 +4,10 @@
     using Humanizer;
     using System;
     using System.Collections.Generic;
-    using System.IO;
 
+    /// <summary>
+    /// Generates code for Event Definitions
+    /// </summary>
     public sealed class EventGenerator : CodeGeneratorBase<EventDefinition>
     {
         public EventGenerator(IServiceProvider serviceProvider)

@@ -6,6 +6,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// Generates code for Domain Definitions
+    /// </summary>
     public sealed class DomainGenerator : CodeGeneratorBase<DomainDefinition>
     {
         public DomainGenerator(IServiceProvider serviceProvider)

@@ -1,20 +1,69 @@
 # chrome-dev-tools
 Dot Net Core based implementation of the [Chrome Remote Interface](https://developer.chrome.com/devtools/docs/debugger-protocol)
  
-Some use cases for this are:
+Some use cases for using the Chrome Remote Interface to automate chrome are:
  - Information Gathering - Use the web as a data source by creating structured data out of unstructured data
  - Testing - Ensure sites are up and behave according to a pre-determined notion
  - Automation - Do things like perform automated password resets, enter online contests, notify when sites change, etc...
  - Artifact Generation - Use Chrome as a tool to generate PDFs, Images, json/xml/txt/csv/... from web and locally supplied data sources
+ - Debugging JavaScript - When implementing custom editors, allow for rich debugging of executing javascript, including setting breakpoints, getting immediate values when paused, stepping through and so forth.
 
 The protocol itself is defined by Google via a JSON-based definition of a websocket interface, allowing for tools to generate the required interface implementation in the language of choice. 
 
-This generator is a work in progress, currently it:
+A number of other Browsers have started implementing the Chrome Remote Interface, including Edge, Safari (iOS), Firefox and possibly more, which makes developing a common interface to one of these browsers highly attractive.
 
- 1. Launches a local instance of chrome
- 2. Gets the commit/version of the local instance of chrome
- 3. Gets the corresponding Chrome Debugger protocol definition from Google/Chromium sources
- 4. Validates the protocol definition against the schema of the generator classes (to ensure the protocol definition schema hasn't evolved - which would require improving the generator classes)
- 5. Using mustache-based templates, generates .cs files for each protocol domain, types, commands...
+
+This project is a .Net Core Project Generator which creates a .csproj and corresponding class files that provide the connection and a strongly-typed interface to allow one to develop applictions that use the Chrome Remote Interface.
+
+ ## Requirements:
+
+  - Chrome
+  - .Net Core 1.1.0
+
+ ## Usage:
+
+ Clone the project and run RemoteInterfaceGeneratorCLI
+
+ ``` Bash
+ $ git clone https://github.com/BaristaLabs/chrome-dev-tools
+ $ cd chrome-dev-tools\src\RemoteInterfaceGeneratorCLI
+ $ dotnet run RemoteInterfaceGeneratorCLI -o "C:\\temp\\ChromeDevToolsRuntime"
+ ```
+
+In C:\Temp\ChromeDevToolsRuntime you'll have a .csproj that you can build directly or include as part of a solution.
+
+> See [http://github.com/BaristaLabs/chrome-dev-tools-sample](http://github.com/BaristaLabs/chrome-dev-tools-sample) for a sample of generated output usage.
+
+## Command line options:
+
+  Option | Short | Description
+  --- | --- | ---
+ ```-output-path <folder>``` | ```-o``` | Specifies the path to where the .csproj and code files will be generated (Usually contained in a subfolder of a solution that will utilize it) [Default: ./OutputProtocol]
+ ```-force``` | ```-f``` | Indicates to delete the output path before files are generated (for a clean output) [Default: false]
+ ```-protocol-path``` | -p | When specified, indicates the path to a JSON file that contains the chrome debugging protocol definition to use. If not found, one will be generated using the current installed version of chrome. [Default: chrome-debugging-protocol.json]
+ ```-settings``` | -s | When specified indicates the path to a JSON file that contains code generation settings. [Default: ./Templates/settings.json]
+
+ ## Customizing output:
  
-Further work needs to be done to add events, generate the .csproj file too, and get the whole thing working as a minimum viable product and go from there.
+ The output that is generated is higly configurable through the use of mustache templates.
+ 
+ The base set of templates is included in /chrome-dev-tools/src/RemoteInterfaceGeneratorCLI/Templates and can be customized to your liking by editing the .mustache files and modifying settings.json.
+
+## Development
+
+Feel free to submit pull requests
+
+#### General Application Flow
+
+A general rundown of the flow of this generator is the following:
+
+ 0. Parse command line options and specified settings file.
+ 1. If a protocol definition file is not found, launches a local instance of Chrome
+    1. Gets the commit/version of the launched instance of Chrome
+    2. Gets the corresponding Chrome Debugger protocol definition from Google/Chromium sources
+ 2. Validates the protocol definition against the schema of the generator classes (to ensure the protocol definition schema hasn't evolved - which would require improving this project)
+ 3. In memory, using the mustache-based templates, generates .cs files
+    1. Perform a pre-scan of all Types, Commands and Events. 
+    2. For each include file specified in settings.json, generate the corresponding file.
+    3. For each Domain output types, events and commands
+ 4. Output to disk each generated file.
