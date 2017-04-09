@@ -1,5 +1,5 @@
 # chrome-dev-tools
-Dot Net Core based implementation of the [Chrome Debugger PRotocol](https://developer.chrome.com/devtools/docs/debugger-protocol)
+Dot Net Core based implementation of the [Chrome Debugger Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol)
  
 Some use cases for using the Chrome Debugger Protocol to automate Chrome are:
  - Information Gathering - Use the web as a data source by creating structured data out of unstructured data
@@ -10,7 +10,7 @@ Some use cases for using the Chrome Debugger Protocol to automate Chrome are:
 
 The protocol itself is defined by Google via a JSON-based definition of a websocket interface, allowing for tools to generate the required interface implementation in the language of choice. 
 
-A number of other Browsers have started implementing the Chrome Remote Interface, including Edge, Safari (iOS), Firefox and possibly more, which makes developing a common interface to one of these browsers highly attractive.
+A number of other Browsers have started implementing the Chrome Debugger Protocol, including Edge, Safari (iOS), Firefox and possibly more, which makes developing a common interface to one of these browsers highly attractive.
 
 
 This project is a .Net Core Project Generator which creates a .csproj and corresponding class files that provide the connection and a strongly-typed interface to allow one to develop applictions that use the debugger protocol for fun and profit.
@@ -60,7 +60,7 @@ A general rundown of the flow of this generator is the following:
  0. Parse command line options and specified settings file.
  1. If a protocol definition file is not found, launches a local instance of Chrome
     1. Gets the commit/version of the launched instance of Chrome
-    2. Gets the corresponding Chrome Debugger protocol definition from Google/Chromium sources
+    2. Gets the corresponding Chrome Debugger Protocol definition from Google/Chromium sources
  2. Validates the protocol definition against the schema of the generator classes (to ensure the protocol definition schema hasn't evolved - which would require improving this project)
  3. In memory, using the mustache-based templates, generates .cs files
     1. Perform a pre-scan of all Types, Commands and Events. 
