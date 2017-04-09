@@ -71,7 +71,7 @@
             var includeData = new {
                 rootNamespace = Settings.RootNamespace,
                 domains = domains,
-                commmands = commands,
+                commands = commands,
                 events = events,
                 types = types.Select(kvp => kvp.Value).ToList()
             };

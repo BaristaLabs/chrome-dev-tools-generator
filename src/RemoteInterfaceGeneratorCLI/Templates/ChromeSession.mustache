@@ -49,12 +49,48 @@
         /// Sends the specified command and returns the associated command response.
         /// </summary>
         /// <typeparam name="TCommand"></typeparam>
-        /// <typeparam name="TCommandResponse"></typeparam>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public async Task<ICommandResponse<TCommand>> SendCommand<TCommand>(TCommand command)
+            where TCommand : ICommand
+        {
+            return await SendCommand<TCommand>(command, CancellationToken.None);
+        }
+
+
+        /// <summary>
+        /// Sends the specified command and returns the associated command response.
+        /// </summary>
+        /// <typeparam name="TCommand"></typeparam>
+        /// <param name="command"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<ICommandResponse<TCommand>> SendCommand<TCommand>(TCommand command, CancellationToken cancellationToken)
+            where TCommand : ICommand
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            var result = await SendCommandInternal(command, cancellationToken);
+            
+            if (result == null)
+                return null;
+
+            if (!CommandResponseTypeMap.TryGetCommandResponseType<TCommand>(out Type commandResponseType))
+                throw new InvalidOperationException($"Type {typeof(TCommand)} does not correspond to a known command response type.");
+
+            return result.ToObject(commandResponseType) as ICommandResponse<TCommand>;
+        }
+
+        /// <summary>
+        /// Sends the specified command and returns the associated command response.
+        /// </summary>
+        /// <typeparam name="TCommand"></typeparam>
         /// <param name="command"></param>
         /// <returns></returns>
         public async Task<TCommandResponse> SendCommand<TCommand, TCommandResponse>(TCommand command)
-            where TCommand : ICommand<TCommandResponse>
-            where TCommandResponse : ICommandResponse
+            where TCommand : ICommand
+            where TCommandResponse : ICommandResponse<TCommand>
         {
             return await SendCommand<TCommand, TCommandResponse>(command, CancellationToken.None);
         }
@@ -62,18 +98,29 @@
         /// <summary>
         /// Sends the specified command and returns the associated command response.
         /// </summary>
-        /// <typeparam name="TCommand"></typeparam>
+        /// <typeparam name="TCommand"></typeparam
         /// <typeparam name="TCommandResponse"></typeparam>
         /// <param name="command"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public async Task<TCommandResponse> SendCommand<TCommand, TCommandResponse>(TCommand command, CancellationToken cancellationToken)
-            where TCommand : ICommand<TCommandResponse>
-            where TCommandResponse : ICommandResponse
+            where TCommand : ICommand
+            where TCommandResponse : ICommandResponse<TCommand>
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
+            var result = await SendCommandInternal(command, cancellationToken);
+
+            if (result == null)
+                return default(TCommandResponse);
+
+            return result.ToObject<TCommandResponse>();
+        }
+
+        private async Task<JToken> SendCommandInternal<TCommand>(TCommand command, CancellationToken cancellationToken)
+            where TCommand : ICommand
+        {
             var contents = JsonConvert.SerializeObject(new
             {
                 id = Interlocked.Increment(ref m_currentCommandId),
@@ -88,8 +135,8 @@
             m_sessionSocket.Send(contents);
 
             await Task.Run(() => m_responseReceived.Wait(5000, cancellationToken));
-            
-            return m_lastResponseResult.ToObject<TCommandResponse>();
+
+            return m_lastResponseResult;
         }
 
         /// <summary>

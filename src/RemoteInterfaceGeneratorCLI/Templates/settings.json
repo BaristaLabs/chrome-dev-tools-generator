@@ -13,6 +13,15 @@
       "outputPath": "CommandResponseException.cs"
     },
     {
+      "templatePath": "CommandResponseExtensions.mustache",
+      "outputPath": "CommandResponseExtensions.cs"
+    },
+    {
+      "templatePath": "CommandResponseTypeMap.mustache",
+      "outputPath": "CommandResponseTypeMap.cs",
+      "removeNewLines": true
+    },
+    {
       "templatePath": "EventTypeMap.mustache",
       "outputPath": "EventTypeMap.cs",
       "removeNewLines": true

@@ -5,7 +5,7 @@
     /// <summary>
     /// {{command.Description}}
     /// </summary>
-    public sealed class {{className}}Command : ICommand<{{className}}CommandResponse>
+    public sealed class {{className}}Command : ICommand
     {
         private const string ChromeRemoteInterface_CommandName = "{{domain.Name}}.{{command.Name}}";
         
@@ -34,7 +34,7 @@
     {{/each}}
     }
 
-    public sealed class {{className}}CommandResponse : ICommandResponse
+    public sealed class {{className}}CommandResponse : ICommandResponse<{{className}}Command>
     {
     {{#each command.Returns}}
         {{#if Description}}
