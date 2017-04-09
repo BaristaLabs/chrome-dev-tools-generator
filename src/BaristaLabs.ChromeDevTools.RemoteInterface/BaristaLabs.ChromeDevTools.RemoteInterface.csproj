@@ -10,7 +10,6 @@
     <PackageReference Include="Mustache" Version="1.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
     <PackageReference Include="NJsonSchema" Version="8.30.6304.31883" />
-    <PackageReference Include="WebSocket4Net" Version="0.15.0-beta6" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 # chrome-dev-tools
 Dot Net Core based implementation of the [Chrome Remote Interface](https://developer.chrome.com/devtools/docs/debugger-protocol)
  
-Some use cases for using the Chrome Remote Interface to automate chrome are:
+Some use cases for using the Chrome Remote Interface to automate Chrome are:
  - Information Gathering - Use the web as a data source by creating structured data out of unstructured data
  - Testing - Ensure sites are up and behave according to a pre-determined notion
  - Automation - Do things like perform automated password resets, enter online contests, notify when sites change, etc...
@@ -65,5 +65,9 @@ A general rundown of the flow of this generator is the following:
  3. In memory, using the mustache-based templates, generates .cs files
     1. Perform a pre-scan of all Types, Commands and Events. 
     2. For each include file specified in settings.json, generate the corresponding file.
-    3. For each Domain output types, events and commands
+    3. For each Domain, generate files for each types, events and commands using the corresponding template defined in settings.
  4. Output to disk each generated file.
+
+#### Thanks
+
+Thanks to [Mustache-Sharp](https://github.com/jehugaleahsa/mustache-sharp), [WebSocket4Net](https://github.com/kerryjiang/WebSocket4Net), [NJsonSchema](https://github.com/NJsonSchema/NJsonSchema), [Humanizer](https://github.com/Humanizr/Humanizer)
