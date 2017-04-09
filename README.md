@@ -37,11 +37,11 @@ In C:\Temp\ChromeDevToolsRuntime you'll have a .csproj that you can build direct
 ## Command line options:
 
   Option | Short | Description
-  --- | --- | ---
- ```-output-path <folder>``` | ```-o``` | Specifies the path to where the .csproj and code files will be generated (Usually contained in a subfolder of a solution that will utilize it) [Default: ./OutputProtocol]
+  --------------- | --- | ---
+ ```-output-path <path>``` | ```-o``` | Specifies the path to where the .csproj and code files will be generated (Usually contained in a subfolder of a solution that will utilize it) [Default: ./OutputProtocol]
  ```-force``` | ```-f``` | Indicates to delete the output path before files are generated (for a clean output) [Default: false]
- ```-protocol-path``` | -p | When specified, indicates the path to a JSON file that contains the chrome debugging protocol definition to use. If not found, one will be generated using the current installed version of chrome. [Default: chrome-debugging-protocol.json]
- ```-settings``` | -s | When specified indicates the path to a JSON file that contains code generation settings. [Default: ./Templates/settings.json]
+ ```-protocol-path <path>``` | -p | When specified, indicates the path to a JSON file that contains the chrome debugging protocol definition to use. If not found, one will be generated using the current installed version of chrome. [Default: chrome-debugging-protocol.json]
+ ```-settings <path>``` | -s | When specified indicates the path to a JSON file that contains code generation settings. [Default: ./Templates/settings.json]
 
  ## Customizing output:
  
