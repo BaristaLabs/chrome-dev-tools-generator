@@ -1,5 +1,6 @@
 ﻿namespace {{rootNamespace}}
 {
+    using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
@@ -14,6 +15,7 @@
     public sealed class ChromeSession : IDisposable
     {
         private readonly string m_endpointAddress;
+        private readonly ILogger<ChromeSession> m_logger;
         private readonly ConcurrentDictionary<string, ConcurrentBag<Action<object>>> m_eventHandlers = new ConcurrentDictionary<string, ConcurrentBag<Action<object>>>();
         private readonly ConcurrentDictionary<Type, string> m_eventTypeMap = new ConcurrentDictionary<Type, string>();
 
@@ -24,11 +26,17 @@
         private long m_currentCommandId = 0;
 
         public ChromeSession(string endpointAddress)
+            : this(null, endpointAddress)
+        {
+        }
+        
+        public ChromeSession(ILogger<ChromeSession> logger, string endpointAddress)
         {
             if (String.IsNullOrWhiteSpace(endpointAddress))
                 throw new ArgumentNullException(nameof(endpointAddress));
             
             CommandTimeout = 5000;
+            m_logger = logger;
             m_endpointAddress = endpointAddress;
 
             m_sessionSocket = new WebSocket(m_endpointAddress);
@@ -145,6 +153,9 @@
 
             m_responseReceived.Reset();
 
+            if (m_logger != null)
+                m_logger.LogInformation("SendCommand", contents);
+
             m_sessionSocket.Send(contents);
 
             var responseWasReceived = await Task.Run(() => m_responseReceived.Wait(CommandTimeout), cancellationToken);
@@ -219,6 +230,9 @@
 
         private void Ws_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
+            if (m_logger != null)
+                m_logger.LogInformation("Web Socket Error", e.Exception);
+
             throw e.Exception;
         }
 
@@ -226,6 +240,9 @@
         {
             var messageObject = JObject.Parse(e.Message);
 
+            if (m_logger != null)
+                m_logger.LogInformation("MessageReceived", e.Message);
+            
             if (messageObject.TryGetValue("id", out JToken idProperty) && idProperty.Value<long>() == m_currentCommandId)
             {
 
