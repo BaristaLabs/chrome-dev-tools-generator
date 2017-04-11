@@ -1,5 +1,8 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.CodeGen
 {
+    /// <summary>
+    /// Represents information about a Chrome Debugger Protocol event.
+    /// </summary>
     public sealed class EventInfo
     {
         public string EventName

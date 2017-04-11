@@ -2,6 +2,9 @@
 {
     using Newtonsoft.Json;
 
+    /// <summary>
+    /// Represents the chrome version information retrieved from chrome.
+    /// </summary>
     public class ChromeVersion
     {
         [JsonProperty(PropertyName = "Browser")]

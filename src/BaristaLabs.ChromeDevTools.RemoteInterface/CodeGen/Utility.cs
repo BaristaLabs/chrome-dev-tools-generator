@@ -1,5 +1,8 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.CodeGen
 {
+    /// <summary>
+    /// Contains various utility methods.
+    /// </summary>
     public static class Utility
     {
         /// <summary>

@@ -57,6 +57,7 @@
                 Directory.Delete(cliArguments.OutputPath, true);
             }
 
+            //Create the output path if it doesn't exist, and write generated files to disk.
             var directoryInfo = Directory.CreateDirectory(cliArguments.OutputPath);
 
             var sha1 = System.Security.Cryptography.SHA1.Create();
@@ -98,7 +99,7 @@
             {
                 Console.WriteLine("Obtaining protocol definition from installed Chrome version...");
 
-                using (var chrome = ChromeFactory.OpenChrome())
+                using (var chrome = Chrome.OpenChrome())
                 {
                     protocolData = await chrome.GetProtocolDefinitionForCurrentChromeVersion();
                 }

@@ -5,6 +5,9 @@
     using System.IO;
     using Humanizer;
 
+    /// <summary>
+    /// Represents a Mustache-Sharp extension that "dehumanizes" a string.
+    /// </summary>
     public class DehumanizeTagDefinition : ContentTagDefinition
     {
         public DehumanizeTagDefinition()

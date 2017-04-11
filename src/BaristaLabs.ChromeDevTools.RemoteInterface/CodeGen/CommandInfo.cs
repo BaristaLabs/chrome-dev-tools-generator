@@ -1,5 +1,8 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.CodeGen
 {
+    /// <summary>
+    /// Represents information about a Chrome Debugger Protocol command.
+    /// </summary>
     public sealed class CommandInfo
     {
         public string CommandName

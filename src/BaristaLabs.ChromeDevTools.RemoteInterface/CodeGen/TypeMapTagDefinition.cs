@@ -6,6 +6,9 @@
     using System.Collections.Generic;
     using System.IO;
 
+    /// <summary>
+    /// Represents a Mustache-Sharp extension that maps a type name to a previously located type.
+    /// </summary>
     public class TypeMapTagDefinition : ContentTagDefinition
     {
         public TypeMapTagDefinition()
