@@ -65,7 +65,7 @@
         public async Task<ICommandResponse<TCommand>> SendCommand<TCommand>(TCommand command, bool throwExceptionIfResponseNotReceived = true)
             where TCommand : ICommand
         {
-            return await SendCommand<TCommand>(command, CancellationToken.None, throwExceptionIfResponseNotReceived);
+            return await SendCommand(command, CancellationToken.None, throwExceptionIfResponseNotReceived);
         }
 
         /// <summary>

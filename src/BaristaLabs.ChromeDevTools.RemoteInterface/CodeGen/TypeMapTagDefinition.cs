@@ -66,7 +66,12 @@
             {
                 var typeInfo = knownTypes[type];
                 if (typeInfo.IsPrimitive)
-                    return typeInfo.TypeName;
+                {
+                    if (typeInfo.TypeName == "string")
+                        return typeInfo.TypeName;
+
+                    return typeDefinition.Optional ? typeInfo.TypeName + "?" : typeInfo.TypeName;
+                }
                 mappedType = $"{typeInfo.Namespace}.{typeInfo.TypeName}";
             }
 
@@ -84,13 +89,13 @@
                 switch (type)
                 {
                     case "number":
-                        mappedType = "double";
+                        mappedType = typeDefinition.Optional ? "double?" : "double";
                         break;
                     case "integer":
-                        mappedType = "long";
+                        mappedType = typeDefinition.Optional ? "long?" : "long";
                         break;
                     case "boolean":
-                        mappedType = "bool";
+                        mappedType = typeDefinition.Optional ? "bool?" : "bool";
                         break;
                     case "string":
                         mappedType = "string";
