@@ -1,5 +1,7 @@
 ﻿namespace {{rootNamespace}}.{{domain.Name}}
 {
+    using Newtonsoft.Json;
+
     /// <summary>
     /// {{type.Description}}
     /// </summary>
@@ -9,6 +11,7 @@
         /// <summary>
         /// {{Description}}
         ///</summary>
+        [JsonProperty("{{Name}}"{{#if Optional}}, DefaultValueHandling = DefaultValueHandling.Ignore{{/if}})]
         public {{#typemap this context}}{{Type}}{{/typemap}} {{#dehumanize}}{{Name}}{{/dehumanize}}
         {
             get;
