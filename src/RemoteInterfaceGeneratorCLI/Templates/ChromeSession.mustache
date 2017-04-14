@@ -90,7 +90,7 @@
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var result = await SendCommandInternal(command, cancellationToken, throwExceptionIfResponseNotReceived);
+            var result = await SendCommand(command.CommandName, JToken.FromObject(command), cancellationToken, throwExceptionIfResponseNotReceived);
 
             if (result == null)
                 return null;
@@ -131,7 +131,7 @@
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var result = await SendCommandInternal(command, cancellationToken, throwExceptionIfResponseNotReceived);
+            var result = await SendCommand(command.CommandName, JToken.FromObject(command), cancellationToken, throwExceptionIfResponseNotReceived);
 
             if (result == null)
                 return default(TCommandResponse);
@@ -139,20 +139,19 @@
             return result.ToObject<TCommandResponse>();
         }
 
-        private async Task<JToken> SendCommandInternal<TCommand>(TCommand command, CancellationToken cancellationToken, bool throwExceptionIfResponseNotReceived = true)
-            where TCommand : ICommand
+        public async Task<JToken> SendCommand(string commandName, JToken @params, CancellationToken cancellationToken, bool throwExceptionIfResponseNotReceived = true)
         {
             var message = new
             {
                 id = Interlocked.Increment(ref m_currentCommandId),
-                method = command.CommandName,
-                @params = command
+                method = commandName,
+                @params = @params
             };
 
             await OpenSessionConnection();
 
-            LogTrace("Sending {id} {method}: {params}", message.id, message.method, JsonConvert.SerializeObject(message.@params));
-
+            LogTrace("Sending {id} {method}: {params}", message.id, message.method, @params.ToString());
+            
             var contents = JsonConvert.SerializeObject(message);
 
             m_responseReceived.Reset();
@@ -161,7 +160,7 @@
             var responseWasReceived = await Task.Run(() => m_responseReceived.Wait(CommandTimeout), cancellationToken);
 
             if (!responseWasReceived && throwExceptionIfResponseNotReceived)
-                throw new InvalidOperationException($"A command response was not received: {command.CommandName}");
+                throw new InvalidOperationException($"A command response was not received: {commandName}");
 
             return m_lastResponseResult;
         }
