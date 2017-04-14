@@ -151,7 +151,7 @@
 
             await OpenSessionConnection();
 
-            LogTrace("Sending {id} {method}: {params}", message.id, message.method, message.@params);
+            LogTrace("Sending {id} {method}: {params}", message.id, message.method, JsonConvert.SerializeObject(message.@params));
 
             var contents = JsonConvert.SerializeObject(message);
 

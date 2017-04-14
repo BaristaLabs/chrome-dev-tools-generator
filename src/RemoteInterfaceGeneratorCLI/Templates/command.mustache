@@ -25,7 +25,7 @@
         /// Gets or sets the {{Name}}
         /// </summary>
         {{/if}}
-        [JsonProperty("{{Name}}")]
+        [JsonProperty("{{Name}}"{{#if Optional}}, DefaultValueHandling = DefaultValueHandling.Ignore{{/if}})]
         public {{#typemap this context}}{{Type}}{{/typemap}} {{#dehumanize}}{{Name}}{{/dehumanize}}
         {
             get;
