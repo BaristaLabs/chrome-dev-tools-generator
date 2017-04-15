@@ -21,7 +21,17 @@
         /// </summary>
         public async Task<{{#dehumanize}}{{Name}}CommandResponse{{/dehumanize}}> {{#dehumanize}}{{Name}}{{/dehumanize}}({{#dehumanize}}{{Name}}Command{{/dehumanize}} command)
         {
-            return await m_session.SendCommand<{{#dehumanize}}{{Name}}Command{{/dehumanize}}, {{#dehumanize}}{{Name}}CommandResponse{{/dehumanize}}>(command);
+            return await m_session.SendCommand<{{#dehumanize}}{{Name}}{{/dehumanize}}Command, {{#dehumanize}}{{Name}}{{/dehumanize}}CommandResponse>(command);
+        }
+    {{/each}}
+
+    {{#each domain.Events}}
+        /// <summary>
+        /// {{Description}}
+        /// </summary>
+        public void SubscribeTo{{#dehumanize}}{{Name}}{{/dehumanize}}Event(Action<{{#dehumanize}}{{Name}}{{/dehumanize}}Event> eventCallback)
+        {
+            m_session.Subscribe(eventCallback);
         }
     {{/each}}
     }
