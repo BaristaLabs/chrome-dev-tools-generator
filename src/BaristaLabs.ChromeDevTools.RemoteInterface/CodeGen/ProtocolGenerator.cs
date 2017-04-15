@@ -109,7 +109,6 @@
                         case "object":
                             typeInfo = new TypeInfo
                             {
-                                Namespace = $"{Settings.RootNamespace}.{domain.Name.Dehumanize()}",
                                 IsPrimitive = false,
                                 TypeName = type.Id.Dehumanize(),
                             };
@@ -118,7 +117,7 @@
                             if (type.Enum != null && type.Enum.Count() > 0)
                                 typeInfo = new TypeInfo
                                 {
-                                    Namespace = $"{Settings.RootNamespace}.{domain.Name.Dehumanize()}",
+                                    ByRef = true,
                                     IsPrimitive = false,
                                     TypeName = type.Id.Dehumanize(),
                                 };
@@ -154,6 +153,7 @@
                         case "number":
                             typeInfo = new TypeInfo
                             {
+                                ByRef = true,
                                 IsPrimitive = true,
                                 TypeName = "double"
                             };
@@ -161,6 +161,7 @@
                         case "integer":
                             typeInfo = new TypeInfo
                             {
+                                ByRef = true,
                                 IsPrimitive = true,
                                 TypeName = "long"
                             };
@@ -169,6 +170,8 @@
                             throw new InvalidOperationException($"Unknown Type Definition Type: {type.Id}");
                     }
 
+                    typeInfo.Namespace = domain.Name.Dehumanize();
+                    typeInfo.SourcePath = $"{domain.Name}.{type.Id}";
                     knownTypes.Add($"{domain.Name}.{type.Id}", typeInfo);
                 }
             }

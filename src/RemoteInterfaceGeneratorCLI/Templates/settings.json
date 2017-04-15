@@ -27,10 +27,6 @@
       "removeNewLines": true
     },
     {
-      "templatePath": "StringClassConverter.mustache",
-      "outputPath": "StringClassConverter.cs"
-    },
-    {
       "templatePath": "EventTypeMap.mustache",
       "outputPath": "EventTypeMap.cs",
       "removeNewLines": true

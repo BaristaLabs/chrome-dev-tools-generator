@@ -67,10 +67,7 @@
                 var typeInfo = knownTypes[type];
                 if (typeInfo.IsPrimitive)
                 {
-                    if (typeInfo.TypeName == "string")
-                        return typeInfo.TypeName;
-
-                    return typeDefinition.Optional ? typeInfo.TypeName + "?" : typeInfo.TypeName;
+                    return typeDefinition.Optional && typeInfo.ByRef ? typeInfo.TypeName + "?" : typeInfo.TypeName;
                 }
                 mappedType = $"{typeInfo.Namespace}.{typeInfo.TypeName}";
             }
@@ -80,7 +77,13 @@
                 var fullyQualifiedTypeName = $"{domainDefinition.Name}.{type}";
 
                 if (knownTypes.ContainsKey(fullyQualifiedTypeName))
-                    mappedType = knownTypes[fullyQualifiedTypeName].TypeName;
+                {
+                    var typeInfo = knownTypes[fullyQualifiedTypeName];
+
+                    mappedType = typeInfo.TypeName;
+                    if (typeInfo.ByRef && typeDefinition.Optional)
+                        mappedType += "?";
+                }
             }
 
             
@@ -112,7 +115,10 @@
                 }
             }
 
-            return mappedType + (isArray ? "[]" : String.Empty);
+            if (isArray)
+                mappedType += "[]";
+
+            return mappedType;
         }
     }
 }

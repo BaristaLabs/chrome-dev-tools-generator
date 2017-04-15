@@ -5,6 +5,12 @@
     /// </summary>
     public sealed class TypeInfo
     {
+        public bool ByRef
+        {
+            get;
+            set;
+        }
+
         public string Namespace
         {
             get;
@@ -18,6 +24,12 @@
         }
 
         public string TypeName
+        {
+            get;
+            set;
+        }
+
+        public string SourcePath
         {
             get;
             set;
