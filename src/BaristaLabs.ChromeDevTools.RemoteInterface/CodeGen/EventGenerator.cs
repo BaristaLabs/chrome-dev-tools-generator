@@ -19,6 +19,9 @@
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
+            if (String.IsNullOrWhiteSpace(Settings.DefinitionTemplates.EventTemplate.TemplatePath))
+                return result;
+
             var eventGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.DefinitionTemplates.EventTemplate);
 
             var className = eventDefinition.Name.Dehumanize();

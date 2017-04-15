@@ -1,0 +1,28 @@
+﻿namespace {{rootNamespace}}.{{domain.Name}}
+{
+    using System;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Represents an adapter for the {{domain.Name}} domain to simplify the command interface.
+    /// </summary>
+    public class {{#dehumanize}}{{domain.Name}}{{/dehumanize}}Adapter
+    {
+        private readonly ChromeSession m_session;
+        
+        public {{#dehumanize}}{{domain.Name}}{{/dehumanize}}Adapter(ChromeSession session)
+        {
+            m_session = session ?? throw new ArgumentNullException(nameof(session));
+        }
+
+    {{#each domain.Commands}}
+        /// <summary>
+        /// {{Description}}
+        /// </summary>
+        public async Task<{{#dehumanize}}{{Name}}CommandResponse{{/dehumanize}}> {{#dehumanize}}{{Name}}{{/dehumanize}}({{#dehumanize}}{{Name}}Command{{/dehumanize}} command)
+        {
+            return await m_session.SendCommand<{{#dehumanize}}{{Name}}Command{{/dehumanize}}, {{#dehumanize}}{{Name}}CommandResponse{{/dehumanize}}>(command);
+        }
+    {{/each}}
+    }
+}

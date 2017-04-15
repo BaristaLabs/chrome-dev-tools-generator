@@ -10,6 +10,13 @@
         public CodeGenerationDefinitionTemplateSettings()
         {
             //Set Defaults;
+            DomainTemplate = new CodeGenerationTemplateSettings
+            {
+                TemplatePath = "domain.mustache",
+                OutputPath = "{{domainName}}\\{{className}}Adapter.cs",
+                RemoveNewLines = false
+            };
+
             CommandTemplate = new CodeGenerationTemplateSettings {
                 TemplatePath = "command.mustache",
                 OutputPath = "{{domainName}}\\{{className}}Command.cs",
@@ -36,6 +43,13 @@
                 OutputPath = "{{domainName}}\\{{className}}.cs",
                 RemoveNewLines = false
             };
+        }
+
+        [JsonProperty("domainTemplate")]
+        public CodeGenerationTemplateSettings DomainTemplate
+        {
+            get;
+            set;
         }
 
         [JsonProperty("commandTemplate")]

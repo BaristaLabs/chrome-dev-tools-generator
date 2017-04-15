@@ -44,6 +44,9 @@
                     throw new InvalidOperationException($"Unsupported Type Definition Type: {typeDefinition.Type}");
             }
 
+            if (String.IsNullOrWhiteSpace(templateSettings.TemplatePath))
+                return result;
+
             Generator typeGenerator = TemplatesManager.GetGeneratorForTemplate(templateSettings);
 
             var className = typeDefinition.Id.Dehumanize();

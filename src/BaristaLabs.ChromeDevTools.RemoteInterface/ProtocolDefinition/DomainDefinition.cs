@@ -1,11 +1,8 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition
 {
-    using BaristaLabs.ChromeDevTools.RemoteInterface.CodeGen;
     using Newtonsoft.Json;
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Linq;
 
     public sealed class DomainDefinition : ProtocolDefinitionItem
     {

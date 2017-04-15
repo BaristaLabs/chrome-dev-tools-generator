@@ -12,7 +12,7 @@
     /// <summary>
     /// Represents a websocket connection to a running chrome instance that can be used to send commands and recieve events.
     ///</summary>
-    public sealed class ChromeSession : IDisposable
+    public partial class ChromeSession : IDisposable
     {
         private readonly string m_endpointAddress;
         private readonly ILogger<ChromeSession> m_logger;
@@ -31,6 +31,7 @@
         }
 
         public ChromeSession(ILogger<ChromeSession> logger, string endpointAddress)
+            : this()
         {
             if (String.IsNullOrWhiteSpace(endpointAddress))
                 throw new ArgumentNullException(nameof(endpointAddress));

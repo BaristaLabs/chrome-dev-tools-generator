@@ -9,6 +9,11 @@
       "outputPath": "ChromeSession.cs"
     },
     {
+      "templatePath": "ChromeSession_Domains.mustache",
+      "outputPath": "ChromeSession_Domains.cs",
+      "removeNewLines": true
+    },
+    {
       "templatePath": "CommandResponseException.mustache",
       "outputPath": "CommandResponseException.cs"
     },

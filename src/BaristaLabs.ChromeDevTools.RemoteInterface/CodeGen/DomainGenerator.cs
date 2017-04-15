@@ -1,6 +1,7 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.CodeGen
 {
     using BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition;
+    using Humanizer;
     using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.Collections.Generic;
@@ -43,6 +44,24 @@
                     .ToList()
                     .ForEach(x => result.Add(x.Key, x.Value));
             }
+
+            if (String.IsNullOrWhiteSpace(Settings.DefinitionTemplates.DomainTemplate.TemplatePath))
+                return result;
+
+            var domainGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.DefinitionTemplates.DomainTemplate);
+
+            var className = domainDefinition.Name.Dehumanize();
+
+            string codeResult = domainGenerator.Render(new
+            {
+                domain = domainDefinition,
+                className = className,
+                rootNamespace = Settings.RootNamespace,
+                context = context
+            });
+
+            var outputPath = Utility.ReplaceTokensInPath(Settings.DefinitionTemplates.DomainTemplate.OutputPath, className, context, Settings);
+            result.Add(outputPath, codeResult);
 
             return result;
         }
