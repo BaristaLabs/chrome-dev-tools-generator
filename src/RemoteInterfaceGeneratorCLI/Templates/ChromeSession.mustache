@@ -90,10 +90,10 @@
         /// <param name="command"></param>
         /// <param name="throwExceptionIfResponseNotReceived"></param>
         /// <returns></returns>
-        public async Task<ICommandResponse<TCommand>> SendCommand<TCommand>(TCommand command, bool throwExceptionIfResponseNotReceived = true)
+        public async Task<ICommandResponse<TCommand>> SendCommand<TCommand>(TCommand command, int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
             where TCommand : ICommand
         {
-            return await SendCommand(command, CancellationToken.None, throwExceptionIfResponseNotReceived);
+            return await SendCommand(command, CancellationToken.None, millisecondsTimeout, throwExceptionIfResponseNotReceived);
         }
 
         /// <summary>
@@ -104,13 +104,13 @@
         /// <param name="cancellationToken"></param>
         /// <param name="throwExceptionIfResponseNotReceived"></param>
         /// <returns></returns>
-        public async Task<ICommandResponse<TCommand>> SendCommand<TCommand>(TCommand command, CancellationToken cancellationToken, bool throwExceptionIfResponseNotReceived = true)
+        public async Task<ICommandResponse<TCommand>> SendCommand<TCommand>(TCommand command, CancellationToken cancellationToken, int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
             where TCommand : ICommand
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var result = await SendCommand(command.CommandName, JToken.FromObject(command), cancellationToken, throwExceptionIfResponseNotReceived);
+            var result = await SendCommand(command.CommandName, JToken.FromObject(command), cancellationToken, millisecondsTimeout, throwExceptionIfResponseNotReceived);
 
             if (result == null)
                 return null;
@@ -128,11 +128,11 @@
         /// <param name="command"></param>
         /// <param name="throwExceptionIfResponseNotReceived"></param>
         /// <returns></returns>
-        public async Task<TCommandResponse> SendCommand<TCommand, TCommandResponse>(TCommand command, bool throwExceptionIfResponseNotReceived = true)
+        public async Task<TCommandResponse> SendCommand<TCommand, TCommandResponse>(TCommand command, int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
             where TCommand : ICommand
             where TCommandResponse : ICommandResponse<TCommand>
         {
-            return await SendCommand<TCommand, TCommandResponse>(command, CancellationToken.None, throwExceptionIfResponseNotReceived);
+            return await SendCommand<TCommand, TCommandResponse>(command, CancellationToken.None, millisecondsTimeout, throwExceptionIfResponseNotReceived);
         }
 
         /// <summary>
@@ -144,14 +144,14 @@
         /// <param name="cancellationToken"></param>
         /// <param name="throwExceptionIfResponseNotReceived"></param>
         /// <returns></returns>
-        public async Task<TCommandResponse> SendCommand<TCommand, TCommandResponse>(TCommand command, CancellationToken cancellationToken, bool throwExceptionIfResponseNotReceived = true)
+        public async Task<TCommandResponse> SendCommand<TCommand, TCommandResponse>(TCommand command, CancellationToken cancellationToken, int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
             where TCommand : ICommand
             where TCommandResponse : ICommandResponse<TCommand>
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var result = await SendCommand(command.CommandName, JToken.FromObject(command), cancellationToken, throwExceptionIfResponseNotReceived);
+            var result = await SendCommand(command.CommandName, JToken.FromObject(command), cancellationToken, millisecondsTimeout, throwExceptionIfResponseNotReceived);
 
             if (result == null)
                 return default(TCommandResponse);
@@ -168,7 +168,7 @@
         /// <param name="throwExceptionIfResponseNotReceived"></param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public async Task<JToken> SendCommand(string commandName, JToken @params, CancellationToken cancellationToken, bool throwExceptionIfResponseNotReceived = true)
+        public async Task<JToken> SendCommand(string commandName, JToken @params, CancellationToken cancellationToken, int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
         {
             var message = new
             {
@@ -176,6 +176,9 @@
                 method = commandName,
                 @params = @params
             };
+
+            if (millisecondsTimeout.HasValue == false)
+                millisecondsTimeout = CommandTimeout;
 
             await OpenSessionConnection();
 
@@ -186,7 +189,7 @@
             m_responseReceived.Reset();
             m_sessionSocket.Send(contents);
 
-            var responseWasReceived = await Task.Run(() => m_responseReceived.Wait(CommandTimeout), cancellationToken);
+            var responseWasReceived = await Task.Run(() => m_responseReceived.Wait(millisecondsTimeout.Value), cancellationToken);
 
             if (!responseWasReceived && throwExceptionIfResponseNotReceived)
                 throw new InvalidOperationException($"A command response was not received: {commandName}");
