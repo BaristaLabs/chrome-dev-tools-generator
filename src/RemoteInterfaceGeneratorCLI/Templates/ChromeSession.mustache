@@ -5,6 +5,7 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Concurrent;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
     using WebSocket4Net;
@@ -22,7 +23,7 @@
         private WebSocket m_sessionSocket;
         private ManualResetEventSlim m_openEvent = new ManualResetEventSlim(false);
         private ManualResetEventSlim m_responseReceived = new ManualResetEventSlim(false);
-        public JToken m_lastResponseResult;
+        private LastResponseInfo m_lastResponse;
         private long m_currentCommandId = 0;
 
         public ChromeSession(string endpointAddress)
@@ -140,6 +141,7 @@
             return result.ToObject<TCommandResponse>();
         }
 
+        [DebuggerStepThrough]
         public async Task<JToken> SendCommand(string commandName, JToken @params, CancellationToken cancellationToken, bool throwExceptionIfResponseNotReceived = true)
         {
             var message = new
@@ -163,7 +165,22 @@
             if (!responseWasReceived && throwExceptionIfResponseNotReceived)
                 throw new InvalidOperationException($"A command response was not received: {commandName}");
 
-            return m_lastResponseResult;
+            if (m_lastResponse.IsError)
+            {
+                var errorMessage = m_lastResponse.Result.Value<string>("message");
+                var errorData = m_lastResponse.Result.Value<string>("data");
+
+                var exceptionMessage = $"{commandName}: {errorMessage}";
+                if (!String.IsNullOrWhiteSpace(errorData))
+                    exceptionMessage = exceptionMessage + " - {errorData}";
+
+                LogTrace("Recieved Error Response {id}: {message} {data}", message.id, message, errorData);
+                throw new CommandResponseException(exceptionMessage)
+                {
+                    Code = m_lastResponse.Result.Value<long>("code")
+                };
+            }
+            return m_lastResponse.Result;
         }
 
         /// <summary>
@@ -260,23 +277,21 @@
                 
                 if (messageObject.TryGetValue("error", out JToken errorProperty))
                 {
-                    var message = errorProperty.Value<string>("message");
-                    var data = errorProperty.Value<string>("data");
-
-                    var exceptionMessage = message;
-                    if (!String.IsNullOrWhiteSpace(data))
-                        exceptionMessage = $"{message} - {data}";
-
-                    LogTrace("Recieved Error Response {id}: {message} {data}", commandId, message, data);
-
-                    throw new CommandResponseException(exceptionMessage)
+                    m_lastResponse = new LastResponseInfo
                     {
-                        Code = errorProperty.Value<long>("code")
+                        IsError = true,
+                        Result = errorProperty
                     };
+                    m_responseReceived.Set();
+                    return;
                 }
 
-                m_lastResponseResult = messageObject["result"];
-                LogTrace("Recieved Response {id}: {message}", commandId, m_lastResponseResult.ToString());
+                m_lastResponse = new LastResponseInfo
+                {
+                    Result = messageObject["result"]
+                };
+
+                LogTrace("Recieved Response {id}: {message}", commandId, m_lastResponse.Result.ToString());
                 m_responseReceived.Set();
                 return;
             }
@@ -335,6 +350,14 @@
         public void Dispose()
         {
             Dispose(true);
+        }
+        #endregion
+
+        #region Nested Classes
+        private class LastResponseInfo
+        {
+            public bool IsError = false;
+            public JToken Result;
         }
         #endregion
     }
