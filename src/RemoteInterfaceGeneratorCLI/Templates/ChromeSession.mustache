@@ -8,6 +8,7 @@
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Threading.Tasks.Dataflow;
     using WebSocket4Net;
 
     /// <summary>
@@ -20,36 +21,15 @@
         private readonly ConcurrentDictionary<string, ConcurrentBag<Action<object>>> m_eventHandlers = new ConcurrentDictionary<string, ConcurrentBag<Action<object>>>();
         private readonly ConcurrentDictionary<Type, string> m_eventTypeMap = new ConcurrentDictionary<Type, string>();
 
+        private ActionBlock<string> m_messageQueue;
         private WebSocket m_sessionSocket;
         private ManualResetEventSlim m_openEvent = new ManualResetEventSlim(false);
         private ManualResetEventSlim m_responseReceived = new ManualResetEventSlim(false);
         private LastResponseInfo m_lastResponse;
         private long m_currentCommandId = 0;
 
-        public ChromeSession(string endpointAddress)
-            : this(null, endpointAddress)
-        {
-        }
-
-        public ChromeSession(ILogger<ChromeSession> logger, string endpointAddress)
-            : this()
-        {
-            if (String.IsNullOrWhiteSpace(endpointAddress))
-                throw new ArgumentNullException(nameof(endpointAddress));
-
-            CommandTimeout = 5000;
-            m_logger = logger;
-            m_endpointAddress = endpointAddress;
-
-            m_sessionSocket = new WebSocket(m_endpointAddress);
-            m_sessionSocket.EnableAutoSendPing = false;
-            m_sessionSocket.MessageReceived += Ws_MessageReceived;
-            m_sessionSocket.Error += Ws_Error;
-            m_sessionSocket.Opened += Ws_Opened;
-        }
-
         /// <summary>
-        /// Gets or sets the number of milliseconds to wait for a command to complete.
+        /// Gets or sets the number of milliseconds to wait for a command to complete. Default is 5 seconds.
         /// </summary>
         public int CommandTimeout
         {
@@ -63,6 +43,44 @@
         public string EndpointAddress
         {
             get { return m_endpointAddress; }
+        }
+
+
+        /// <summary>
+        /// Creates a new Chrome session to the specified WS endpoint without logging.
+        /// </summary>
+        /// <param name="endpointAddress"></param>
+        public ChromeSession(string endpointAddress)
+            : this(null, endpointAddress)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new ChromeSession to the specified WS endpoint with the specified logger implementation.
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="endpointAddress"></param>
+        public ChromeSession(ILogger<ChromeSession> logger, string endpointAddress)
+            : this()
+        {
+            if (String.IsNullOrWhiteSpace(endpointAddress))
+                throw new ArgumentNullException(nameof(endpointAddress));
+
+            CommandTimeout = 5000;
+            m_logger = logger;
+            m_endpointAddress = endpointAddress;
+
+            m_messageQueue = new ActionBlock<string>((Action<string>)ProcessIncomingMessage,
+                new ExecutionDataflowBlockOptions {
+                    EnsureOrdered = true,
+                    MaxDegreeOfParallelism = 1,
+                });
+
+            m_sessionSocket = new WebSocket(m_endpointAddress);
+            m_sessionSocket.EnableAutoSendPing = false;
+            m_sessionSocket.MessageReceived += Ws_MessageReceived;
+            m_sessionSocket.Error += Ws_Error;
+            m_sessionSocket.Opened += Ws_Opened;
         }
 
         /// <summary>
@@ -141,6 +159,14 @@
             return result.ToObject<TCommandResponse>();
         }
 
+        /// <summary>
+        /// Returns a JToken based on a command created with the specified command name and params.
+        /// </summary>
+        /// <param name="commandName"></param>
+        /// <param name="params"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="throwExceptionIfResponseNotReceived"></param>
+        /// <returns></returns>
         [DebuggerStepThrough]
         public async Task<JToken> SendCommand(string commandName, JToken @params, CancellationToken cancellationToken, bool throwExceptionIfResponseNotReceived = true)
         {
@@ -239,42 +265,14 @@
             }
         }
 
-        private void LogTrace(string message, params object[] args)
+        private void ProcessIncomingMessage(string message)
         {
-            if (m_logger == null)
-                return;
-
-            m_logger.LogTrace(message, args);
-        }
-
-        private void LogError(string message, params object[] args)
-        {
-            if (m_logger == null)
-                return;
-
-            m_logger.LogError(message, args);
-        }
-
-        #region EventHandlers
-        private void Ws_Opened(object sender, EventArgs e)
-        {
-            m_openEvent.Set();
-        }
-
-        private void Ws_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
-        {
-            LogError("Error: {exception}", e.Exception);
-            throw e.Exception;
-        }
-
-        private void Ws_MessageReceived(object sender, MessageReceivedEventArgs e)
-        {
-            var messageObject = JObject.Parse(e.Message);
+            var messageObject = JObject.Parse(message);
 
             long commandId;
             if (messageObject.TryGetValue("id", out JToken idProperty) && (commandId = idProperty.Value<long>()) == m_currentCommandId)
             {
-                
+
                 if (messageObject.TryGetValue("error", out JToken errorProperty))
                 {
                     m_lastResponse = new LastResponseInfo
@@ -305,7 +303,45 @@
                 return;
             }
 
-            LogTrace("Recieved Other: {message}", e.Message);
+            LogTrace("Recieved Other: {message}", message);
+        }
+
+        private void LogTrace(string message, params object[] args)
+        {
+            if (m_logger == null)
+                return;
+
+            m_logger.LogTrace(message, args);
+        }
+
+        private void LogError(string message, params object[] args)
+        {
+            if (m_logger == null)
+                return;
+
+            m_logger.LogError(message, args);
+        }
+
+
+        #region EventHandlers
+        private void Ws_Opened(object sender, EventArgs e)
+        {
+            m_openEvent.Set();
+        }
+
+        private void Ws_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
+        {
+            LogError("Error: {exception}", e.Exception);
+            throw e.Exception;
+        }
+
+        private void Ws_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            //Add incoming messages to an ActionBlock so they can be processed sequentially.
+            if (m_messageQueue != null)
+            {
+                m_messageQueue.Post(e.Message);
+            }
         }
         #endregion
 
@@ -325,6 +361,12 @@
                         m_sessionSocket.Error -= Ws_Error;
                         m_sessionSocket.MessageReceived -= Ws_MessageReceived;
                         m_sessionSocket = null;
+                    }
+
+                    if (m_messageQueue != null)
+                    {
+                        m_messageQueue.Complete();
+                        m_messageQueue = null;
                     }
 
                     if (m_openEvent != null)
