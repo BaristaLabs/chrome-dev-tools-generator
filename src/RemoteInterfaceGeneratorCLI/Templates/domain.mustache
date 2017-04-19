@@ -27,9 +27,9 @@
         /// <summary>
         /// {{Description}}
         /// </summary>
-        public async Task<{{#dehumanize}}{{Name}}CommandResponse{{/dehumanize}}> {{#dehumanize}}{{Name}}{{/dehumanize}}({{#dehumanize}}{{Name}}Command{{/dehumanize}} command)
+        public async Task<{{#dehumanize}}{{Name}}CommandResponse{{/dehumanize}}> {{#dehumanize}}{{Name}}{{/dehumanize}}({{#dehumanize}}{{Name}}Command{{/dehumanize}} command, int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
         {
-            return await m_session.SendCommand<{{#dehumanize}}{{Name}}{{/dehumanize}}Command, {{#dehumanize}}{{Name}}{{/dehumanize}}CommandResponse>(command);
+            return await m_session.SendCommand<{{#dehumanize}}{{Name}}{{/dehumanize}}Command, {{#dehumanize}}{{Name}}{{/dehumanize}}CommandResponse>(command, millisecondsTimeout, throwExceptionIfResponseNotReceived);
         }
     {{/each}}
 
