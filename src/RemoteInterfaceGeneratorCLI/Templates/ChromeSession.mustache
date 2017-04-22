@@ -167,7 +167,7 @@
             m_responseReceived.Reset();
             m_sessionSocket.Send(contents);
 
-            var responseWasReceived = await Task.Run(() => m_responseReceived.Wait(millisecondsTimeout.Value), cancellationToken);
+            var responseWasReceived = await Task.Run(() => m_responseReceived.Wait(millisecondsTimeout.Value, cancellationToken));
 
             if (!responseWasReceived && throwExceptionIfResponseNotReceived)
                 throw new InvalidOperationException($"A command response was not received: {commandName}");
@@ -227,7 +227,7 @@
             {
                 m_sessionSocket.Open();
 
-                await Task.Run(() => m_openEvent.Wait(), cancellationToken);
+                await Task.Run(() => m_openEvent.Wait(cancellationToken));
             }
         }
 
