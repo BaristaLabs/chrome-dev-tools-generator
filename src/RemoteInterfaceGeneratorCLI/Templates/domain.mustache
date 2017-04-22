@@ -1,6 +1,7 @@
 ﻿namespace {{rootNamespace}}.{{domain.Name}}
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -27,9 +28,9 @@
         /// <summary>
         /// {{Description}}
         /// </summary>
-        public async Task<{{#dehumanize}}{{Name}}CommandResponse{{/dehumanize}}> {{#dehumanize}}{{Name}}{{/dehumanize}}({{#dehumanize}}{{Name}}Command{{/dehumanize}} command, int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
+        public async Task<{{#dehumanize}}{{Name}}CommandResponse{{/dehumanize}}> {{#dehumanize}}{{Name}}{{/dehumanize}}({{#dehumanize}}{{Name}}Command{{/dehumanize}} command, CancellationToken cancellationToken = default(CancellationToken), int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
         {
-            return await m_session.SendCommand<{{#dehumanize}}{{Name}}{{/dehumanize}}Command, {{#dehumanize}}{{Name}}{{/dehumanize}}CommandResponse>(command, millisecondsTimeout, throwExceptionIfResponseNotReceived);
+            return await m_session.SendCommand<{{#dehumanize}}{{Name}}{{/dehumanize}}Command, {{#dehumanize}}{{Name}}{{/dehumanize}}CommandResponse>(command, cancellationToken, millisecondsTimeout, throwExceptionIfResponseNotReceived);
         }
     {{/each}}
 
