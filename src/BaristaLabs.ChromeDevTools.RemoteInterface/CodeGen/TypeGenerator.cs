@@ -2,7 +2,6 @@
 {
     using BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition;
     using Humanizer;
-    using Mustache;
     using System;
     using System.Collections.Generic;
 
@@ -47,10 +46,10 @@
             if (String.IsNullOrWhiteSpace(templateSettings.TemplatePath))
                 return result;
 
-            Generator typeGenerator = TemplatesManager.GetGeneratorForTemplate(templateSettings);
+            var typeGenerator = TemplatesManager.GetGeneratorForTemplate(templateSettings);
 
             var className = typeDefinition.Id.Dehumanize();
-            var codeResult = typeGenerator.Render(new
+            var codeResult = typeGenerator(new
             {
                 type = typeDefinition,
                 className = className,

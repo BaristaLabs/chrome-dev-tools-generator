@@ -12,36 +12,31 @@
             //Set Defaults;
             DomainTemplate = new CodeGenerationTemplateSettings
             {
-                TemplatePath = "domain.mustache",
+                TemplatePath = "domain.hbs",
                 OutputPath = "{{domainName}}\\{{className}}Adapter.cs",
-                RemoveNewLines = false
             };
 
             CommandTemplate = new CodeGenerationTemplateSettings {
-                TemplatePath = "command.mustache",
+                TemplatePath = "command.hbs",
                 OutputPath = "{{domainName}}\\{{className}}Command.cs",
-                RemoveNewLines = false
             };
 
             EventTemplate = new CodeGenerationTemplateSettings
             {
-                TemplatePath = "event.mustache",
+                TemplatePath = "event.hbs",
                 OutputPath = "{{domainName}}\\{{className}}Event.cs",
-                RemoveNewLines = false
             };
 
             TypeObjectTemplate = new CodeGenerationTemplateSettings
             {
-                TemplatePath = "type-object.mustache",
+                TemplatePath = "type-object.hbs",
                 OutputPath = "{{domainName}}\\{{className}}.cs",
-                RemoveNewLines = false
             };
 
             TypeEnumTemplate = new CodeGenerationTemplateSettings
             {
-                TemplatePath = "type-enum.mustache",
+                TemplatePath = "type-enum.hbs",
                 OutputPath = "{{domainName}}\\{{className}}.cs",
-                RemoveNewLines = false
             };
         }
 

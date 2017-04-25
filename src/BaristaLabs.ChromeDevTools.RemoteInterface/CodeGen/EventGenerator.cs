@@ -26,7 +26,7 @@
 
             var className = eventDefinition.Name.Dehumanize();
 
-            string codeResult = eventGenerator.Render(new
+            string codeResult = eventGenerator(new
             {
                 @event = eventDefinition,
                 className = className,

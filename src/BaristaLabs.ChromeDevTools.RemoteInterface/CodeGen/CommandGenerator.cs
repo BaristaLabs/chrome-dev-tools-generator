@@ -25,7 +25,7 @@
             var commandGenerator = TemplatesManager.GetGeneratorForTemplate(Settings.DefinitionTemplates.CommandTemplate);
 
             var className = commandDefinition.Name.Dehumanize();
-            string codeResult = commandGenerator.Render(new
+            string codeResult = commandGenerator(new
             {
                 command = commandDefinition,
                 className = className,

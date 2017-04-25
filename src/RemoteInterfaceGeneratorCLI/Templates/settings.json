@@ -1,42 +1,39 @@
 ﻿{
   "include": [
     {
-      "templatePath": "project.mustache",
+      "templatePath": "project.hbs",
       "outputPath": "BaristaLabs.ChromeDevTools.Runtime.csproj"
     },
     {
-      "templatePath": "ChromeSession.mustache",
+      "templatePath": "ChromeSession.hbs",
       "outputPath": "ChromeSession.cs"
     },
     {
-      "templatePath": "ChromeSession_Domains.mustache",
-      "outputPath": "ChromeSession_Domains.cs",
-      "removeNewLines": true
+      "templatePath": "ChromeSession_Domains.hbs",
+      "outputPath": "ChromeSession_Domains.cs"
     },
     {
-      "templatePath": "CommandResponseException.mustache",
+      "templatePath": "CommandResponseException.hbs",
       "outputPath": "CommandResponseException.cs"
     },
     {
-      "templatePath": "CommandResponseExtensions.mustache",
+      "templatePath": "CommandResponseExtensions.hbs",
       "outputPath": "CommandResponseExtensions.cs"
     },
     {
-      "templatePath": "CommandResponseTypeMap.mustache",
-      "outputPath": "CommandResponseTypeMap.cs",
-      "removeNewLines": true
+      "templatePath": "CommandResponseTypeMap.hbs",
+      "outputPath": "CommandResponseTypeMap.cs"
     },
     {
-      "templatePath": "EventTypeMap.mustache",
-      "outputPath": "EventTypeMap.cs",
-      "removeNewLines": true
+      "templatePath": "EventTypeMap.hbs",
+      "outputPath": "EventTypeMap.cs"
     },
     {
-      "templatePath": "ICommand.mustache",
+      "templatePath": "ICommand.hbs",
       "outputPath": "ICommand.cs"
     },
     {
-      "templatePath": "IEvent.mustache",
+      "templatePath": "IEvent.hbs",
       "outputPath": "IEvent.cs"
     }
   ],

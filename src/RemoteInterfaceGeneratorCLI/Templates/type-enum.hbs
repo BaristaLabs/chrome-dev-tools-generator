@@ -12,7 +12,7 @@
     {
     {{#each type.Enum}}
         [EnumMember(Value = "{{this}}")]
-        {{#dehumanize}}{{this}}{{/dehumanize}},
+        {{dehumanize this}},
     {{/each}}
     }
 }

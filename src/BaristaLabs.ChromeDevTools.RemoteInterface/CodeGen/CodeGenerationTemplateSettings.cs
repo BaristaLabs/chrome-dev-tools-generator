@@ -20,12 +20,5 @@
             get;
             set;
         }
-
-        [JsonProperty("removeNewLines")]
-        public bool RemoveNewLines
-        {
-            get;
-            set;
-        }
     }
 }

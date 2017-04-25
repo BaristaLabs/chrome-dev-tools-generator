@@ -52,7 +52,7 @@
 
             var className = domainDefinition.Name.Dehumanize();
 
-            string codeResult = domainGenerator.Render(new
+            string codeResult = domainGenerator(new
             {
                 domain = domainDefinition,
                 className = className,

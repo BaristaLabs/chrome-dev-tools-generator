@@ -45,9 +45,9 @@ In C:\Temp\ChromeDevToolsRuntime you'll have a .csproj that you can build direct
 
  ## Customizing output:
  
- The output that is generated is higly configurable through the use of mustache templates.
+ The output that is generated is highly configurable through the use of mustache/handlebars templates.
  
- The base set of templates is included in /chrome-dev-tools/src/RemoteInterfaceGeneratorCLI/Templates and can be customized to your liking by editing the .mustache files and modifying settings.json.
+ The base set of templates is included in /chrome-dev-tools/src/RemoteInterfaceGeneratorCLI/Templates and can be customized to your liking by editing the .hbs files (Handlebars-based templates) and modifying settings.json.
 
 ## Development
 
@@ -62,7 +62,7 @@ A general rundown of the flow of this generator is the following:
     1. Gets the commit/version of the launched instance of Chrome
     2. Gets the corresponding Chrome Debugger Protocol definition from Google/Chromium sources
  2. Validates the protocol definition against the schema of the generator classes (to ensure the protocol definition schema hasn't evolved - which would require improving this project)
- 3. In memory, using the mustache-based templates, generates .cs files
+ 3. In memory, using the handlebars-based templates, generates .cs files
     1. Perform a pre-scan of all Types, Commands and Events. 
     2. For each include file specified in settings.json, generate the corresponding file.
     3. For each Domain, generate files for each types, events and commands using the corresponding template defined in settings.
@@ -70,4 +70,4 @@ A general rundown of the flow of this generator is the following:
 
 #### Thanks
 
-Thanks to [Mustache-Sharp](https://github.com/jehugaleahsa/mustache-sharp), [WebSocket4Net](https://github.com/kerryjiang/WebSocket4Net), [NJsonSchema](https://github.com/NJsonSchema/NJsonSchema), [Humanizer](https://github.com/Humanizr/Humanizer)
+Thanks to [Handlebars.Net](https://github.com/rexm/Handlebars.Net), [WebSocket4Net](https://github.com/kerryjiang/WebSocket4Net), [NJsonSchema](https://github.com/NJsonSchema/NJsonSchema), [Humanizer](https://github.com/Humanizr/Humanizer)

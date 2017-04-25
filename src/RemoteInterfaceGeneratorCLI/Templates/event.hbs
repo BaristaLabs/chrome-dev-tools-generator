@@ -12,13 +12,13 @@
         /// <summary>
         /// {{Description}}
         /// </summary>
-        {{#else}}
+        {{else}}
         /// <summary>
         /// Gets or sets the {{Name}}
         /// </summary>
         {{/if}}
         [JsonProperty("{{Name}}"{{#if Optional}}, DefaultValueHandling = DefaultValueHandling.Ignore{{/if}})]
-        public {{#typemap this context}}{{Type}}{{/typemap}} {{#dehumanize}}{{Name}}{{/dehumanize}}
+        public {{typemap ../context}} {{dehumanize Name}}
         {
             get;
             set;

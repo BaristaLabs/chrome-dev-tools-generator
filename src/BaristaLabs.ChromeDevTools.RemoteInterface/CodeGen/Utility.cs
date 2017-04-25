@@ -1,5 +1,9 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.CodeGen
 {
+    using BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition;
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Contains various utility methods.
     /// </summary>
@@ -20,6 +24,81 @@
             path = path.Replace("{{templatePath}}", settings.TemplatesPath);
             path = path.Replace("{{domainName}}", context.Domain.Name);
             return path;
+        }
+
+        /// <summary>
+        /// For the given type, gets the associated type mapping given the domain and known types.
+        /// </summary>
+        /// <param name="typeDefinition"></param>
+        /// <param name="domainDefinition"></param>
+        /// <param name="knownTypes"></param>
+        /// <param name="isArray"></param>
+        /// <returns></returns>
+        public static string GetTypeMappingForType(TypeDefinition typeDefinition, DomainDefinition domainDefinition, IDictionary<string, TypeInfo> knownTypes, bool isArray = false)
+        {
+            var type = typeDefinition.Type;
+
+            if (String.IsNullOrWhiteSpace(type))
+                type = typeDefinition.TypeReference;
+
+            string mappedType = null;
+            if (type.Contains(".") && knownTypes.ContainsKey(type))
+            {
+                var typeInfo = knownTypes[type];
+                if (typeInfo.IsPrimitive)
+                {
+                    return typeDefinition.Optional && typeInfo.ByRef ? typeInfo.TypeName + "?" : typeInfo.TypeName;
+                }
+                mappedType = $"{typeInfo.Namespace}.{typeInfo.TypeName}";
+            }
+
+            if (mappedType == null)
+            {
+                var fullyQualifiedTypeName = $"{domainDefinition.Name}.{type}";
+
+                if (knownTypes.ContainsKey(fullyQualifiedTypeName))
+                {
+                    var typeInfo = knownTypes[fullyQualifiedTypeName];
+
+                    mappedType = typeInfo.TypeName;
+                    if (typeInfo.ByRef && typeDefinition.Optional)
+                        mappedType += "?";
+                }
+            }
+
+
+            if (mappedType == null)
+            {
+                switch (type)
+                {
+                    case "number":
+                        mappedType = typeDefinition.Optional ? "double?" : "double";
+                        break;
+                    case "integer":
+                        mappedType = typeDefinition.Optional ? "long?" : "long";
+                        break;
+                    case "boolean":
+                        mappedType = typeDefinition.Optional ? "bool?" : "bool";
+                        break;
+                    case "string":
+                        mappedType = "string";
+                        break;
+                    case "object":
+                    case "any":
+                        mappedType = "object";
+                        break;
+                    case "array":
+                        mappedType = GetTypeMappingForType(typeDefinition.Items, domainDefinition, knownTypes, true);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unmapped data type: {type}");
+                }
+            }
+
+            if (isArray)
+                mappedType += "[]";
+
+            return mappedType;
         }
     }
 }

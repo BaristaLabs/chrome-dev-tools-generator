@@ -82,7 +82,7 @@
             foreach (var include in Settings.Include)
             {
                 var includeCodeGenerator = TemplatesManager.GetGeneratorForTemplate(include);
-                var includeCodeResult = includeCodeGenerator.Render(includeData);
+                var includeCodeResult = includeCodeGenerator(includeData);
                 result.Add(include.OutputPath, includeCodeResult);
             }
 

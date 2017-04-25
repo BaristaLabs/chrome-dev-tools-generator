@@ -1,0 +1,29 @@
+﻿namespace {{rootNamespace}}
+{
+    using System;
+    using System.Collections.Generic;
+
+    public static class CommandResponseTypeMap
+    {
+        private readonly static IDictionary<Type, Type> s_commandResponseTypeDictionary;
+
+        static CommandResponseTypeMap()
+        {
+            s_commandResponseTypeDictionary = new Dictionary<Type, Type>()
+            {
+{{#each commands}}
+                { typeof({{FullTypeName}}), typeof({{FullTypeName}}Response) },
+{{/each}}
+            };
+        }
+
+        /// <summary>
+        /// Gets the command response type corresponding to the specified command type
+        /// </summary>
+        public static bool TryGetCommandResponseType<T>(out Type commandResponseType)
+            where T : ICommand
+        {
+            return s_commandResponseTypeDictionary.TryGetValue(typeof(T), out commandResponseType);
+        }
+    }
+}
