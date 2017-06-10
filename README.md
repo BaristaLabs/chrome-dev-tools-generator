@@ -1,6 +1,8 @@
 # chrome-dev-tools
-Dot Net Core based implementation of the [Chrome Debugger Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol)
- 
+This project generates a wrapper based on the current version of the Chrome Developer Protocol Definition. The supplied template targets .Net Core and creates a .csproj and corresponding class files that provide the connection and a strongly-typed interface to allow one to develop applictions that use the debugger protocol for fun and profit.
+
+# Why use the Chrome Debugger Protocol?
+
 Some use cases for using the Chrome Debugger Protocol to automate Chrome are:
  - Information Gathering - Use the web as a data source by creating structured data out of unstructured data
  - Testing - Ensure sites are up and behave according to a pre-determined notion
@@ -12,8 +14,11 @@ The protocol itself is defined by Google via a JSON-based definition of a websoc
 
 A number of other Browsers have started implementing the Chrome Debugger Protocol, including Edge, Safari (iOS), Firefox and possibly more, which makes developing a common interface to one of these browsers highly attractive.
 
+# Why a generator instead of a concrete implementation or library?
 
-This project is a .Net Core Project Generator which creates a .csproj and corresponding class files that provide the connection and a strongly-typed interface to allow one to develop applictions that use the debugger protocol for fun and profit.
+The protocol is changing rapidly and some have varying opinions on what the wrapper library should look like, by rerunning this generator one can easily update a wrapper to the latest protocol definition.
+
+Also, while this project has a prebuilt template targeting .Net, it's also possible to customize the template to generate wrappers in other languages.
 
  ## Requirements:
 
