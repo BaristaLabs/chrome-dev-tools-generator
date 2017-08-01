@@ -41,5 +41,9 @@
             get;
             set;
         }
+
+        [JsonIgnore]
+        public bool NoParameters => Parameters == null || Parameters.Count == 0;
+
     }
 }
