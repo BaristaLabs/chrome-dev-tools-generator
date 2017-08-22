@@ -1,4 +1,4 @@
-﻿namespace RemoteInterfaceGeneratorCLI
+﻿namespace ChromeDevToolsGeneratorCLI
 {
     using BaristaLabs.ChromeDevTools;
     using BaristaLabs.ChromeDevTools.RemoteInterface.CodeGen;

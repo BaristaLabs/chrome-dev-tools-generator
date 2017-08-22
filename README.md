@@ -1,4 +1,4 @@
-# chrome-dev-tools
+# chrome-dev-tools-generator
 This project generates a wrapper based on the current version of the Chrome Developer Protocol Definition. The supplied template targets .Net Core and creates a .csproj and corresponding class files that provide the connection and a strongly-typed interface to allow one to develop applictions that use the debugger protocol for fun and profit.
 
 # Why use the Chrome Debugger Protocol?
@@ -54,7 +54,7 @@ In C:\Temp\ChromeDevToolsRuntime you'll have a .csproj that you can build direct
  
  The output that is generated is highly configurable through the use of mustache/handlebars templates.
  
- The base set of templates is included in /chrome-dev-tools/src/RemoteInterfaceGeneratorCLI/Templates and can be customized to your liking by editing the .hbs files (Handlebars-based templates) and modifying settings.json.
+ The base set of templates is included in /chrome-dev-tools/src/ChromeDevToolsGeneratorCLI/Templates and can be customized to your liking by editing the .hbs files (Handlebars-based templates) and modifying settings.json.
 
 ## Development
 
