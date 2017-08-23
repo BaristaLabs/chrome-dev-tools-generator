@@ -29,12 +29,12 @@ If you just don't care and want a chrome developer tools library for C#/dotnet, 
 
  ## Usage:
 
- Clone the project and run RemoteInterfaceGeneratorCLI
+ Clone the project and run ChromeDevToolsGeneratorCLI
 
  ``` Bash
  $ git clone https://github.com/BaristaLabs/chrome-dev-tools
- $ cd chrome-dev-tools\src\RemoteInterfaceGeneratorCLI
- $ dotnet run RemoteInterfaceGeneratorCLI -o "C:\\temp\\ChromeDevToolsRuntime"
+ $ cd chrome-dev-tools\src\ChromeDevToolsGeneratorCLI
+ $ dotnet run ChromeDevToolsGeneratorCLI -o "C:\\temp\\ChromeDevToolsRuntime"
  ```
 
 In C:\Temp\ChromeDevToolsRuntime you'll have a .csproj that you can build directly or include as part of a solution.

@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "RemoteInterfaceCLI": {
+    "ChromeDevToolsGeneratorCLI": {
       "commandName": "Project",
-      "commandLineArgs": "-o \"c:\\\\projects\\\\chrome-dev-tools-sample\\\\BaristaLabs.ChromeDevTools.Runtime\""
+      "commandLineArgs": "-o \"c:\\\\projects\\\\chrome-dev-tools-runtime\\\\BaristaLabs.ChromeDevTools.Runtime\""
     }
   }
 }

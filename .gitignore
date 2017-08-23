@@ -261,5 +261,5 @@ __pycache__/
 *.pyc
 
 #other stuffs
-src/RemoteInterfaceGeneratorCLI/OutputProtocol/
-src/RemoteInterfaceGeneratorCLI/chrome-debugging-protocol.json
+src/ChromeDevToolsGeneratorCLI/OutputProtocol/
+src/ChromeDevToolsGeneratorCLI/chrome-debugging-protocol.json
