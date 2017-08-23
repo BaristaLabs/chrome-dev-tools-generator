@@ -99,15 +99,19 @@
             {
                 Console.WriteLine("Obtaining protocol definition from installed Chrome version...");
 
+                ChromeVersion currentVersion;
                 using (var chrome = Chrome.OpenChrome())
                 {
+                    currentVersion = await chrome.GetChromeVersion();
                     protocolData = await chrome.GetProtocolDefinitionForCurrentChromeVersion();
                 }
 
+                protocolData["chromeVersion"] = JToken.FromObject(currentVersion);
                 File.WriteAllText(args.ProtocolPath, JsonConvert.SerializeObject(protocolData, Formatting.Indented));
             }
             else
             {
+                Console.WriteLine("Using previously obtained protocol definition...");
                 var protocolJson = File.ReadAllText(args.ProtocolPath);
                 protocolData = JObject.Parse(protocolJson);
             }

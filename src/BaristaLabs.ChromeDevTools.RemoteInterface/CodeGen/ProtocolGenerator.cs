@@ -69,6 +69,8 @@
 
             //Create an object that contains information that include templates can use.
             var includeData = new {
+                chromeVersion = protocolDefinition.ChromeVersion,
+                runtimeVersion = Settings.RuntimeVersion,
                 rootNamespace = Settings.RootNamespace,
                 domains = domains,
                 commands = commands,

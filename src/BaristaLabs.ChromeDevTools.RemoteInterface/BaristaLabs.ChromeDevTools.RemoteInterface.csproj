@@ -20,4 +20,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BaristaLabs.ChromeDevTools.Core\BaristaLabs.ChromeDevTools.Core.csproj" />
+  </ItemGroup>
+
 </Project>

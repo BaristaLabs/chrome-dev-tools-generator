@@ -14,6 +14,12 @@
             set;
         }
 
+        [JsonIgnore]
+        public string BrowserVersion
+        {
+            get { return Browser.Replace("Chrome/", ""); }
+        }
+
         [JsonProperty(PropertyName = "Protocol-Version")]
         public string ProtocolVersion
         {

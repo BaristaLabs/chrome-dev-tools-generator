@@ -52,6 +52,16 @@
             set;
         }
 
+        /// <summary>
+        /// Gets the version number of the runtime.
+        /// </summary>
+        [JsonProperty("runtimeVersion")]
+        public string RuntimeVersion
+        {
+            get;
+            set;
+        }
+
         [JsonProperty("definitionTemplates")]
         public CodeGenerationDefinitionTemplateSettings DefinitionTemplates
         {

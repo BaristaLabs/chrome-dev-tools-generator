@@ -37,5 +37,6 @@
       "outputPath": "IEvent.cs"
     }
   ],
-  "rootNamespace": "BaristaLabs.ChromeDevTools.Runtime"
+  "rootNamespace": "BaristaLabs.ChromeDevTools.Runtime",
+  "runtimeVersion":  "beta1"
 }
