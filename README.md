@@ -58,6 +58,8 @@ In C:\Temp\ChromeDevToolsRuntime you'll have a .csproj that you can build direct
 
 ## Development
 
+Unfortunately, MS has not decided to go forward with .csproj support in VS2015, so VS2017 or higher is required.
+
 Feel free to submit pull requests
 
 #### General Application Flow
