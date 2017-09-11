@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp1.1</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>{{chromeVersion.BrowserVersion}}-{{runtimeVersion}}</Version>
+        <Version>{{chromeVersion.BrowserVersion}}</Version>
         <Authors>Sean McLellan</Authors>
         <Company>BaristaLabs, LLC</Company>
         <RepositoryUrl>https://github.com/BaristaLabs/chrome-dev-tools-runtime.git</RepositoryUrl>
@@ -17,7 +17,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.2" />
-        <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
-        <PackageReference Include="WebSocket4Net" Version="0.15.0-beta9" />
+        <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+        <PackageReference Include="WebSocket4Net" Version="0.15.0" />
     </ItemGroup>
 </Project>

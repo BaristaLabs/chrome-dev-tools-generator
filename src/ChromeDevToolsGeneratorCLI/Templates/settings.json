@@ -38,5 +38,5 @@
     }
   ],
   "rootNamespace": "BaristaLabs.ChromeDevTools.Runtime",
-  "runtimeVersion":  "beta1"
+  "runtimeVersion":  ""
 }
