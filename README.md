@@ -20,7 +20,11 @@ The protocol is changing rapidly and some have varying opinions on what the wrap
 
 Also, while this project has a prebuilt template targeting .Net, it's also possible to customize the template to generate wrappers in other languages.
 
-If you just don't care and want a chrome developer tools library for C#/dotnet, grab the generated output from [here](http://github.com/BaristaLabs/chrome-dev-tools-sample).
+If you just don't care and want a chrome developer tools runtime library for C#/dotnet, grab the runtime library from [this repository](http://github.com/BaristaLabs/chrome-dev-tools-sample).
+
+The runtime library is also available on nuget:
+
+https://www.nuget.org/packages/BaristaLabs.ChromeDevTools.Runtime/
 
  ## Requirements:
 
