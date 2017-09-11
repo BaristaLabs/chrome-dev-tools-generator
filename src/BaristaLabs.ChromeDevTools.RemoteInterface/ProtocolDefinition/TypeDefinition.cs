@@ -1,6 +1,8 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition
 {
+    using BaristaLabs.ChromeDevTools.RemoteInterface.Converters;
     using Newtonsoft.Json;
+    using NJsonSchema;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -70,6 +72,7 @@
         }
 
         [JsonProperty(PropertyName = "optional")]
+        [JsonConverter(typeof(BooleanJsonConverter))]
         public bool Optional
         {
             get;

@@ -1,5 +1,6 @@
 ﻿namespace BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition
 {
+    using BaristaLabs.ChromeDevTools.RemoteInterface.Converters;
     using Newtonsoft.Json;
 
     public abstract class ProtocolDefinitionItem : IDefinition
@@ -20,6 +21,7 @@
         }
 
         [JsonProperty(PropertyName = "experimental")]
+        [JsonConverter(typeof(BooleanJsonConverter))]
         public bool Experimental
         {
             get;

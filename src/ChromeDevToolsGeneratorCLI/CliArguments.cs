@@ -15,6 +15,7 @@
             : base("RemoteInterfaceCLI")
         {
             ProtocolPath = DefaultChromeDebuggingProtocolPath;
+            ProtocolSchemaPath = DefaultChromeDebuggingProtocolSchemaPath;
             Settings = DefaultSettingsPath;
             OutputPath = DefaultOutputPath;
         }
@@ -36,6 +37,14 @@
             set;
         }
 
+        [Option("generate-protocol-schema")]
+        [Help("Forces the protocol schema to be generated from the current class definition")]
+        public bool GenerateProtocolSchema
+        {
+            get;
+            set;
+        }
+
         [OptionParameter(ShortName: 'o',
                 LongName: "output-path")]
         [Help("Indicates the folder that will contain the generated class library [Default: ./OutputProtocol]")]
@@ -49,6 +58,15 @@
                 LongName: "protocol-path")]
         [Help("Indicates the path to the Chrome Debugging Protocol JSON file to use. [Default: chrome-debugging-protocol.json]")]
         public string ProtocolPath
+        {
+            get;
+            set;
+        }
+
+        [OptionParameter(ShortName: 'd',
+                LongName: "protocol-schema-path")]
+        [Help("Indicates the path to the Chrome Debugging Protocol JSON Schema file to use. [Default: chrome-debugging-protocol-schema.json]")]
+        public string ProtocolSchemaPath
         {
             get;
             set;

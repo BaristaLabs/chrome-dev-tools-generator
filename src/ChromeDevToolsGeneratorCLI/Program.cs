@@ -37,7 +37,7 @@
             var protocolDefinitionData = GetProtocolDefinitionData(cliArguments).GetAwaiter().GetResult();
 
             //Validate that the protocol data matches our current class object.
-            var protocolSchema = JsonSchema4.FromTypeAsync<ProtocolDefinition>(new JsonSchemaGeneratorSettings() { FlattenInheritanceHierarchy = true }).GetAwaiter().GetResult();
+            var protocolSchema = GetProtocolDefinitionSchema(cliArguments).GetAwaiter().GetResult();
             var errors = protocolSchema.Validate(protocolDefinitionData);
             if (errors.Count > 0)
                 throw new InvalidOperationException("Protocol Definition data does not validate against Protocol Definition Class Library. Ensure that all properties have been added.");
@@ -117,6 +117,32 @@
             }
 
             return protocolData;
+        }
+
+        public static async Task<JsonSchema4> GetProtocolDefinitionSchema(CliArguments args)
+        {
+            JsonSchema4 protocolSchema;
+
+            if (args.GenerateProtocolSchema || !File.Exists(args.ProtocolSchemaPath))
+            {
+                Console.WriteLine("Generating protocol definition from current generator interface...");
+
+                protocolSchema = await JsonSchema4.FromTypeAsync<ProtocolDefinition>(new JsonSchemaGeneratorSettings() { FlattenInheritanceHierarchy = true });
+
+                //Chrome 61 has this funky new property on Page.Frame called unreachableUrl that has the properties "optional" and "experimental" defined as
+                //string true/false values. I think this is probably an oversight, but I also can't find a good way to report this as a bug.
+
+                var typeDefinition = protocolSchema.Definitions["TypeDefinition"];
+                typeDefinition.Properties["optional"].Type = JsonObjectType.String | JsonObjectType.Boolean;
+                typeDefinition.Properties["experimental"].Type = JsonObjectType.String | JsonObjectType.Boolean;
+            }
+            else
+            {
+                Console.WriteLine("Using previously obtained protocol schema...");
+                protocolSchema = await JsonSchema4.FromFileAsync(args.ProtocolSchemaPath);
+            }
+
+            return protocolSchema;
         }
     }
 }
