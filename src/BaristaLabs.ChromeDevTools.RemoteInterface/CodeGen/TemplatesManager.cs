@@ -91,6 +91,7 @@
                 writer.WriteSafeString(mappedType);
             });
 
+            Handlebars.Configuration.TextEncoder = null;
             return Handlebars.Compile(templateContents);
         }
     }
