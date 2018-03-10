@@ -3,14 +3,14 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// {{event.Description}}
+    /// {{xml-code-comment event.Description 1}}
     /// </summary>
     public sealed class {{className}}Event : IEvent
     {
     {{#each event.Parameters}}
         {{#if Description}}
         /// <summary>
-        /// {{Description}}
+        /// {{xml-code-comment Description 2}}
         /// </summary>
         {{else}}
         /// <summary>

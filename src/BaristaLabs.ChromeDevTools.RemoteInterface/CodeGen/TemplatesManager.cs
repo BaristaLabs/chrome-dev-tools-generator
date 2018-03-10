@@ -6,6 +6,8 @@
     using System.IO;
     using Humanizer;
     using BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition;
+    using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Represents a class that manages templates and their associated generators.
@@ -68,6 +70,27 @@
                 }
 
                 writer.WriteSafeString(str.Dehumanize());
+            });
+
+            Handlebars.RegisterHelper("xml-code-comment", (writer, context, arguments) =>
+            {
+                if (arguments.Length < 1)
+                {
+                    throw new HandlebarsException("{{code-comment}} helper must have at least one argument");
+                }
+
+                var str = arguments[0].ToString();
+
+                var frontPaddingObj = arguments.ElementAtOrDefault(1);
+                var frontPadding = 1;
+                if (frontPaddingObj != null)
+                {
+                    int.TryParse(frontPaddingObj.ToString(), out frontPadding);
+                }
+                    
+                str = Utility.ReplaceLineEndings(str, Environment.NewLine + new StringBuilder(4 * frontPadding).Insert(0, "    ", frontPadding) + "/// ");
+
+                writer.WriteSafeString(str);
             });
 
             Handlebars.RegisterHelper("typemap", (writer, context, arguments) =>

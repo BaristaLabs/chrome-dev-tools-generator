@@ -3,7 +3,7 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// {{command.Description}}
+    /// {{xml-code-comment command.Description 1}}
     /// </summary>
     public sealed class {{className}}Command : ICommand
     {
@@ -18,7 +18,7 @@
     {{#each command.Parameters}}
         {{#if Description}}
         /// <summary>
-        /// {{Description}}
+        /// {{xml-code-comment Description 2}}
         /// </summary>
         {{else}}
         /// <summary>
@@ -39,7 +39,7 @@
     {{#each command.Returns}}
         {{#if Description}}
         /// <summary>
-        /// {{Description}}
+        /// {{xml-code-comment Description 2}}
         ///</summary>
         {{else}}
         /// <summary>

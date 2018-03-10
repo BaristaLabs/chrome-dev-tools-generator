@@ -3,6 +3,7 @@
     using BaristaLabs.ChromeDevTools.RemoteInterface.ProtocolDefinition;
     using System;
     using System.Collections.Generic;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Contains various utility methods.
@@ -99,6 +100,19 @@
                 mappedType += "[]";
 
             return mappedType;
+        }
+
+        public static string ReplaceLineEndings(string value, string replacement = null)
+        {
+            if (String.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            if (replacement == null)
+                replacement = string.Empty;
+
+            return Regex.Replace(value, @"\r\n?|\n|\u2028|\u2029", replacement, RegexOptions.Compiled);
         }
     }
 }
