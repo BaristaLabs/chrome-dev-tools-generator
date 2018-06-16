@@ -74,7 +74,7 @@
 
             var v8Version = $"{v8VersionMatch.Groups[1].Value}.{v8VersionMatch.Groups[2].Value}.{v8VersionMatch.Groups[3].Value}";
 
-            var browserProtocolUrl = $"https://chromium.googlesource.com/chromium/src/+/{webkitVersionHash}/third_party/WebKit/Source/core/inspector/browser_protocol.json?format=TEXT";
+            var browserProtocolUrl = $"https://chromium.googlesource.com/chromium/src/+/{webkitVersionHash}/third_party/blink/renderer/core/inspector/browser_protocol.json?format=TEXT";
             var jsProtocolUrl = $"https://chromium.googlesource.com/v8/v8/+/{v8Version}/src/inspector/js_protocol.json?format=TEXT";
 
             JObject jBrowserProtocol, jJsProtocol;
