@@ -33,6 +33,12 @@
                 OutputPath = "{{domainName}}\\{{className}}.cs",
             };
 
+            TypeHashTemplate = new CodeGenerationTemplateSettings
+            {
+                TemplatePath = "type-hash.hbs",
+                OutputPath = "{{domainName}}\\{{className}}.cs",
+            };
+
             TypeEnumTemplate = new CodeGenerationTemplateSettings
             {
                 TemplatePath = "type-enum.hbs",
@@ -63,6 +69,13 @@
 
         [JsonProperty("typeObjectTemplate")]
         public CodeGenerationTemplateSettings TypeObjectTemplate
+        {
+            get;
+            set;
+        }
+
+        [JsonProperty("typeHashTemplate")]
+        public CodeGenerationTemplateSettings TypeHashTemplate
         {
             get;
             set;

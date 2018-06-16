@@ -43,6 +43,13 @@
                     throw new InvalidOperationException($"Unsupported Type Definition Type: {typeDefinition.Type}");
             }
 
+            // Special override for the headers object to be an open object.
+            // TODO: make this kind of override configurable.
+            if (context.Domain.Name == "Network" && typeDefinition.Id == "Headers")
+            {
+                templateSettings = Settings.DefinitionTemplates.TypeHashTemplate;
+            }
+
             if (String.IsNullOrWhiteSpace(templateSettings.TemplatePath))
                 return result;
 
