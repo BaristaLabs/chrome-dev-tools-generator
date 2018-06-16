@@ -29,7 +29,7 @@ https://www.nuget.org/packages/BaristaLabs.ChromeDevTools.Runtime/
  ## Requirements:
 
   - Chrome
-  - .Net Core 1.1.0
+  - .Net Core 2.1.0
 
  ## Usage:
 
