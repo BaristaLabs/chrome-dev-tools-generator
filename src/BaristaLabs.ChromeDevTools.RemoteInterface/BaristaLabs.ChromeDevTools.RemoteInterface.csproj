@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Handlebars.Net" Version="1.9.0" />
-    <PackageReference Include="Humanizer.Core" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="NJsonSchema" Version="9.10.12" />
+    <PackageReference Include="Handlebars.Net" Version="1.9.4" />
+    <PackageReference Include="Humanizer.Core" Version="2.3.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="NJsonSchema" Version="9.10.53" />
   </ItemGroup>
 
   <ItemGroup>
