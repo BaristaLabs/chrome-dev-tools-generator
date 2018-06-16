@@ -79,7 +79,20 @@
                     throw new HandlebarsException("{{code-comment}} helper must have at least one argument");
                 }
 
-                var str = arguments[0].ToString();
+                var str = arguments[0] == null ? "" : arguments[0].ToString();
+
+                if (String.IsNullOrWhiteSpace(str))
+                {
+                    switch (context)
+                    {
+                        case ProtocolDefinitionItem pdi:
+                            str = $"{pdi.Name}";
+                            break;
+                        default:
+                            str = context.className;
+                            break;
+                    }
+                }
 
                 var frontPaddingObj = arguments.ElementAtOrDefault(1);
                 var frontPadding = 1;
