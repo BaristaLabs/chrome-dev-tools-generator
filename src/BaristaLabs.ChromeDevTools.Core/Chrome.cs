@@ -8,7 +8,6 @@
     using System.Net.Http;
     using System.Runtime.InteropServices;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -16,13 +15,12 @@
     /// </summary>
     public sealed class Chrome : IDisposable
     {
-        private Process m_chromeProcess;
-        private int m_remoteDebuggingPort;
+        private readonly int m_remoteDebuggingPort;
         private DirectoryInfo m_userDirectory;
 
         internal Chrome(Process chromeProcess, DirectoryInfo userDirectory, int remoteDebuggingPort)
         {
-            m_chromeProcess = chromeProcess ?? throw new ArgumentNullException(nameof(chromeProcess));
+            Process = chromeProcess ?? throw new ArgumentNullException(nameof(chromeProcess));
             m_userDirectory = userDirectory ?? throw new ArgumentNullException(nameof(userDirectory));
             m_remoteDebuggingPort = remoteDebuggingPort;
         }
@@ -30,10 +28,7 @@
         /// <summary>
         /// Gets the Process object for the Chrome Instance
         /// </summary>
-        public Process Process
-        {
-            get { return m_chromeProcess; }
-        }
+        public Process Process { get; private set; }
 
         public async Task<ChromeVersion> GetChromeVersion()
         {
@@ -45,68 +40,6 @@
             }
 
             return version;
-        }
-
-        /// <summary>
-        /// Retrieves a merged protocol version for the current chrome instance.
-        /// </summary>
-        /// <remarks>
-        /// Um, yeah. See https://github.com/cyrus-and/chrome-remote-interface/issues/10#issuecomment-146032907
-        /// </remarks>
-        /// <returns></returns>
-        public async Task<JObject> GetProtocolDefinitionForCurrentChromeVersion()
-        {
-            var currentVersion = await GetChromeVersion();
-
-            //Get the webkit version hash.
-            var webkitVersionRegex = new Regex(@"\s\(@(\b[0-9a-f]{5,40}\b)");
-            var webkitVersionMatch = webkitVersionRegex.Match(currentVersion.WebKitVersion);
-            if (webkitVersionMatch.Success == false || webkitVersionMatch.Groups.Count != 2)
-                throw new InvalidOperationException($"Unable to determine webkit version hash from webkit version string ({currentVersion.WebKitVersion})");
-
-            var webkitVersionHash = webkitVersionMatch.Groups[1].Value;
-
-            //Get the v8 version
-            var v8VersionRegex = new Regex(@"^(\d+)\.(\d+)\.(\d+)(\.\d+.*)?");
-            var v8VersionMatch = v8VersionRegex.Match(currentVersion.V8Version);
-            if (v8VersionMatch.Success == false || v8VersionMatch.Groups.Count < 4)
-                throw new InvalidOperationException($"Unable to determine v8 version number from v8 version string ({currentVersion.V8Version})");
-
-            var v8Version = $"{v8VersionMatch.Groups[1].Value}.{v8VersionMatch.Groups[2].Value}.{v8VersionMatch.Groups[3].Value}";
-
-            var browserProtocolUrl = $"https://chromium.googlesource.com/chromium/src/+/{webkitVersionHash}/third_party/blink/renderer/core/inspector/browser_protocol.json?format=TEXT";
-            var jsProtocolUrl = $"https://chromium.googlesource.com/v8/v8/+/{v8Version}/src/inspector/js_protocol.json?format=TEXT";
-
-            JObject jBrowserProtocol, jJsProtocol;
-
-            using (var browserProtocolClient = new HttpClient())
-            {
-                var browserProtocol64 = await browserProtocolClient.GetStringAsync(browserProtocolUrl);
-                var browserProtocolJson = Encoding.UTF8.GetString(Convert.FromBase64String(browserProtocol64));
-                jBrowserProtocol = JObject.Parse(browserProtocolJson);
-            }
-
-            using (var jsProtocolClient = new HttpClient())
-            {
-                var jsProtocol64 = await jsProtocolClient.GetStringAsync(jsProtocolUrl);
-                var jsProtocolJson = Encoding.UTF8.GetString(Convert.FromBase64String(jsProtocol64));
-                jJsProtocol = JObject.Parse(jsProtocolJson);
-            }
-
-            //Merge the 2 protocols together.
-            if (jJsProtocol["version"]["majorVersion"] != jBrowserProtocol["version"]["majorVersion"] ||
-                jJsProtocol["version"]["minorVersion"] != jBrowserProtocol["version"]["minorVersion"])
-            {
-                throw new InvalidOperationException("Protocol mismatch -- The WebKit and V8 protocol versions should match.");
-            }
-
-            foreach(var domain in jJsProtocol["domains"])
-            {
-                JArray jDomains = (JArray)jBrowserProtocol["domains"];
-                jDomains.Add(domain);
-            }
-
-            return jBrowserProtocol;
         }
 
         private HttpClient GetDebuggerClient()
@@ -125,16 +58,16 @@
             if (disposing)
             {
                 //Kill the chrome process.
-                if (m_chromeProcess != null)
+                if (Process != null)
                 {
-                    if (m_chromeProcess.HasExited == false)
-                        m_chromeProcess.WaitForExit(5000);
+                    if (Process.HasExited == false)
+                        Process.WaitForExit(5000);
 
-                    if (m_chromeProcess.HasExited == false)
-                        m_chromeProcess.Kill();
+                    if (Process.HasExited == false)
+                        Process.Kill();
 
-                    m_chromeProcess.Dispose();
-                    m_chromeProcess = null;
+                    Process.Dispose();
+                    Process = null;
                 }
 
                 //Clean up the target user directory.
@@ -203,6 +136,78 @@
             }
 
             return new Chrome(chromeProcess, directoryInfo, remoteDebuggingPort);
+        }
+
+        /// <summary>
+        /// Retrieves the browser protocol pdl for the specified chrome version.
+        /// </summary>
+        /// <remarks>
+        /// Um, yeah. See https://github.com/cyrus-and/chrome-remote-interface/issues/10#issuecomment-146032907
+        /// </remarks>
+        /// <returns></returns>
+        public static async Task<string> GetBrowserProtocolForChromeVersion(ChromeVersion chromeVersion)
+        {
+            var browserProtocolUrl = $"https://chromium.googlesource.com/chromium/src/+/{chromeVersion.WebKitVersionHash}/third_party/blink/renderer/core/inspector/browser_protocol.pdl?format=TEXT";
+
+            using (var browserProtocolClient = new HttpClient())
+            {
+                var browserProtocol64 = await browserProtocolClient.GetStringAsync(browserProtocolUrl);
+                return Encoding.UTF8.GetString(Convert.FromBase64String(browserProtocol64));
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the javascript protocol pdl for the specified chrome version.
+        /// </summary>
+        public static async Task<string> GetJavaScriptProtocolForChromeVersion(ChromeVersion chromeVersion)
+        {
+            var jsProtocolUrl = $"https://chromium.googlesource.com/v8/v8/+/{chromeVersion.V8VersionNumber}/src/inspector/js_protocol.pdl?format=TEXT";
+
+            using (var jsProtocolClient = new HttpClient())
+            {
+                var jsProtocol64 = await jsProtocolClient.GetStringAsync(jsProtocolUrl);
+                return Encoding.UTF8.GetString(Convert.FromBase64String(jsProtocol64));
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the python script that converts a pdl into json for the specified chrome version.
+        /// </summary>
+        /// <param name="chromeVersion"></param>
+        /// <returns></returns>
+        public static async Task<string> GetInspectorProtocolConverterPythonScript(ChromeVersion chromeVersion)
+        {
+            var protocolScriptUrl = $"https://chromium.googlesource.com/chromium/src/+/{chromeVersion.WebKitVersionHash}/third_party/inspector_protocol/pdl.py?format=TEXT";
+            using (var jsProtocolClient = new HttpClient())
+            {
+                var script64 = await jsProtocolClient.GetStringAsync(protocolScriptUrl);
+                return Encoding.UTF8.GetString(Convert.FromBase64String(script64));
+            }
+        }
+
+        /// <summary>
+        /// Merges a browserProtocol and jsProtocol into a single protocol definition.
+        /// </summary>
+        /// <param name="browserProtocol"></param>
+        /// <param name="jsProtocol"></param>
+        /// <returns></returns>
+        public static JObject MergeJavaScriptProtocolDefinitions(JObject browserProtocol, JObject jsProtocol)
+        {
+            //Merge the 2 protocols together.
+            if (jsProtocol["version"]["majorVersion"] != browserProtocol["version"]["majorVersion"] ||
+                jsProtocol["version"]["minorVersion"] != browserProtocol["version"]["minorVersion"])
+            {
+                throw new InvalidOperationException("Protocol mismatch -- The WebKit and V8 protocol versions should match.");
+            }
+
+            var result = browserProtocol.DeepClone() as JObject;
+            foreach (var domain in jsProtocol["domains"])
+            {
+                JArray jDomains = (JArray)result["domains"];
+                jDomains.Add(domain);
+            }
+
+            return result;
         }
     }
 }

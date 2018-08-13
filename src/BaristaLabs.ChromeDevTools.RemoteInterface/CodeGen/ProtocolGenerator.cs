@@ -131,7 +131,7 @@
                                 };
                             break;
                         case "array":
-                            if (type.Items == null || String.IsNullOrWhiteSpace(type.Items.Type))
+                            if (type.Items == null || String.IsNullOrWhiteSpace(type.Items.Type)) // (... && type.Items.TypeReference != "StringIndex")
                                 throw new NotImplementedException("Did not expect a top-level domain array type to specify a TypeReference");
 
                             string itemType;
@@ -143,8 +143,22 @@
                                 case "number":
                                     itemType = "double";
                                     break;
+                                //TODO: This might be necessary in a future revision
+                                //case null:
+                                //    if (String.IsNullOrWhiteSpace(type.Items.TypeReference))
+                                //        throw new NotImplementedException($"Did not expect a top-level domain array type to have a null type and a null or whitespace type reference.");
+
+                                //    switch (type.Items.TypeReference)
+                                //    {
+                                //        case "StringIndex":
+                                //            itemType = "string";
+                                //            break;
+                                //        default:
+                                //            throw new NotImplementedException($"Did not expect a top-level domain array type to specify a type reference of {type.Items.TypeReference}");
+                                //    }
+                                //    break;
                                 default:
-                                    throw new NotImplementedException($"Did not expect a top-level domain array time to specify items of type {type.Items.Type}");
+                                    throw new NotImplementedException($"Did not expect a top-level domain array type to specify items of type {type.Items.Type}");
                             }
                             typeInfo = new TypeInfo
                             {
