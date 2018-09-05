@@ -48,7 +48,15 @@
                 var typeInfo = knownTypes[type];
                 if (typeInfo.IsPrimitive)
                 {
-                    return typeDefinition.Optional && typeInfo.ByRef ? typeInfo.TypeName + "?" : typeInfo.TypeName;
+                    var primitiveType = typeInfo.TypeName;
+
+                    if (typeDefinition.Optional && typeInfo.ByRef)
+                        primitiveType += "?";
+
+                    if (isArray)
+                        primitiveType += "[]";
+
+                    return primitiveType;
                 }
                 mappedType = $"{typeInfo.Namespace}.{typeInfo.TypeName}";
             }
