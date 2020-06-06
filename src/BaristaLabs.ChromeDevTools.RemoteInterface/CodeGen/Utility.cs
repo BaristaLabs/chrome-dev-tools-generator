@@ -99,6 +99,9 @@
                     case "array":
                         mappedType = GetTypeMappingForType(typeDefinition.Items, domainDefinition, knownTypes, true);
                         break;
+                    case "binary":
+                        mappedType = "byte[]";
+                        break;
                     default:
                         throw new InvalidOperationException($"Unmapped data type: {type}");
                 }
