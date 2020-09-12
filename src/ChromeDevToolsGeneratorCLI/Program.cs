@@ -100,21 +100,14 @@
                 Console.WriteLine("Obtaining protocol definition from installed Chrome version...");
 
                 ChromeVersion currentVersion;
+                string protocolJson;
                 using (var chrome = Chrome.OpenChrome())
                 {
                     currentVersion = await chrome.GetChromeVersion();
+                    protocolJson = await chrome.GetProtocolAsJson();
                 }
 
-                var browserProtocolPdl = await Chrome.GetBrowserProtocolForChromeVersion(currentVersion);
-                var javaScriptProtocolPdl = await Chrome.GetJavaScriptProtocolForChromeVersion(currentVersion);
-
-                var pdlScript = await Chrome.GetInspectorProtocolConverterPythonScript(currentVersion);
-
-                var pdlConverter = new PdlConverter(pdlScript);
-                var browserProtocol = pdlConverter.ToJson(browserProtocolPdl, "browser_protocol.pdl");
-                var jsProtocol = pdlConverter.ToJson(javaScriptProtocolPdl, "js_protocol.pdl");
-
-                protocolData = Chrome.MergeJavaScriptProtocolDefinitions(browserProtocol, jsProtocol);
+                protocolData = JObject.Parse(protocolJson);
                 protocolData["chromeVersion"] = JToken.FromObject(currentVersion);
                 File.WriteAllText(args.ProtocolPath, JsonConvert.SerializeObject(protocolData, Formatting.Indented));
             }
