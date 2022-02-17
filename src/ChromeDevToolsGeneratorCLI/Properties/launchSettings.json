@@ -2,8 +2,8 @@
   "profiles": {
     "ChromeDevToolsGeneratorCLI": {
       "commandName": "Project",
-      "commandLineArgs": "-o \"c:\\\\projects\\\\chrome-dev-tools-runtime\\\\BaristaLabs.ChromeDevTools.Runtime\"",
-      "workingDirectory": "C:\\Projects\\chrome-dev-tools-generator\\src\\ChromeDevToolsGeneratorCLI"
+      "commandLineArgs": "-o \"c:\\\\Users\\\\tomas\\\\source\\\\repos\\\\chrome-dev-tools-runtime\\\\BaristaLabs.ChromeDevTools.Runtime\"",
+      "workingDirectory": "C:\\Users\\tomas\\source\\repos\\chrome-dev-tools-generator\\src\\ChromeDevToolsGeneratorCLI"
     }
   }
 }

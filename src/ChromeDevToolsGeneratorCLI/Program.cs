@@ -13,6 +13,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using System.Text;
+    using System.Net.Http;
 
     class Program
     {
@@ -34,7 +35,7 @@
 
             //Get the protocol Data.
             Console.WriteLine("Loading protocol definition...");
-            var protocolDefinitionData = GetProtocolDefinitionData(cliArguments).GetAwaiter().GetResult();
+            var protocolDefinitionData = GetLatestProtocolDefinitionData(cliArguments).GetAwaiter().GetResult();
 
             //Validate that the protocol data matches our current class object.
             Console.WriteLine("Validating protocol definition...");
@@ -85,6 +86,51 @@
             //Completed.
             Console.WriteLine("All done!");
             return 0;
+        }
+
+        /// <summary>
+        /// Returns a ProtocolDefinition JObject as specified by the <see href="https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/json/browser_protocol.json">browser_protocol.json</see> file.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static async Task<JObject> GetLatestProtocolDefinitionData(CliArguments args)
+        {
+            JObject protocolData;
+            if (args.ForceDownload || !File.Exists(args.ProtocolPath))
+            {
+                Console.WriteLine("Obtaining latest protocol definition...");
+
+                var browserProtocolUrl = "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/json/browser_protocol.json";
+                var jsProtocolUrl = "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/json/js_protocol.json";
+
+                using var httpClient = new HttpClient();
+
+                var browserProtocolResponse = await httpClient.GetStringAsync(browserProtocolUrl);
+                var jsProtocolResponse = await httpClient.GetStringAsync(jsProtocolUrl);
+
+                var browserProtocolData = JObject.Parse(browserProtocolResponse);
+                var jsProtocolData = JObject.Parse(jsProtocolResponse);
+
+                ChromeVersion currentVersion;
+                using (var chrome = Chrome.OpenChrome())
+                {
+                    currentVersion = await chrome.GetChromeVersion();
+                }
+
+                protocolData = Chrome.MergeJavaScriptProtocolDefinitions(browserProtocolData, jsProtocolData);
+
+                protocolData["chromeVersion"] = JToken.FromObject(currentVersion);
+
+                File.WriteAllText(args.ProtocolPath, JsonConvert.SerializeObject(protocolData, Formatting.Indented));
+            }
+            else
+            {
+                Console.WriteLine("Using previously obtained protocol definition...");
+                var protocolJson = File.ReadAllText(args.ProtocolPath);
+                protocolData = JObject.Parse(protocolJson);
+            }
+
+            return protocolData;
         }
 
         /// <summary>

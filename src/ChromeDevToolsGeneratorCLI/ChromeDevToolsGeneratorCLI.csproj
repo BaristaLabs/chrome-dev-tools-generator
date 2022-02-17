@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,8 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BaristaLabs.ChromeDevTools.Core\BaristaLabs.ChromeDevTools.Core.csproj" />
-    <ProjectReference Include="..\BaristaLabs.ChromeDevTools.Core\BaristaLabs.ChromeDevTools.Core.csproj" />
     <ProjectReference Include="..\BaristaLabs.ChromeDevTools.RemoteInterface\BaristaLabs.ChromeDevTools.RemoteInterface.csproj" />
   </ItemGroup>
 </Project>
