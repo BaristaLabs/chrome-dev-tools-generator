@@ -73,7 +73,6 @@
                 //Clean up the target user directory.
                 if (m_userDirectory != null)
                 {
-
                     //for (int i = 0; i < 10; i++)
                     //{
                     //    if (m_userDirectory.Exists == false)
