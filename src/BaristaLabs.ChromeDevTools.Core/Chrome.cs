@@ -73,7 +73,6 @@
                 //Clean up the target user directory.
                 if (m_userDirectory != null)
                 {
-                    
                     //for (int i = 0; i < 10; i++)
                     //{
                     //    if (m_userDirectory.Exists == false)
@@ -120,7 +119,10 @@
             Process chromeProcess;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                chromeProcess = Process.Start(new ProcessStartInfo(@"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", chromeProcessArgs) { CreateNoWindow = true });
+                String programFiles = RuntimeInformation.OSArchitecture == Architecture.X86
+                    ? "Program Files (x86)"
+                    : "Program Files";
+                chromeProcess = Process.Start(new ProcessStartInfo($"C:\\{programFiles}\\Google\\Chrome\\Application\\chrome.exe", chromeProcessArgs) { CreateNoWindow = true });
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
@@ -147,7 +149,7 @@
         /// <returns></returns>
         public static async Task<string> GetBrowserProtocolForChromeVersion(ChromeVersion chromeVersion)
         {
-            var browserProtocolUrl = $"https://chromium.googlesource.com/chromium/src/+/{chromeVersion.WebKitVersionHash}/third_party/blink/renderer/core/inspector/browser_protocol.pdl?format=TEXT";
+            var browserProtocolUrl = $"https://chromium.googlesource.com/chromium/src/+/{chromeVersion.WebKitVersionHash}/third_party/blink/public/devtools_protocol/browser_protocol.pdl?format=TEXT";
 
             using (var browserProtocolClient = new HttpClient())
             {
@@ -161,8 +163,7 @@
         /// </summary>
         public static async Task<string> GetJavaScriptProtocolForChromeVersion(ChromeVersion chromeVersion)
         {
-            var jsProtocolUrl = $"https://chromium.googlesource.com/v8/v8/+/{chromeVersion.V8VersionNumber}/src/inspector/js_protocol.pdl?format=TEXT";
-
+            var jsProtocolUrl = $"https://chromium.googlesource.com/v8/v8/+/{chromeVersion.V8VersionNumber}/include/js_protocol.pdl?format=TEXT";
             using (var jsProtocolClient = new HttpClient())
             {
                 var jsProtocol64 = await jsProtocolClient.GetStringAsync(jsProtocolUrl);
