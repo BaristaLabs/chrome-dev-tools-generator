@@ -8,7 +8,7 @@
     <PackageReference Include="Handlebars.Net" Version="1.9.5" />
     <PackageReference Include="Humanizer.Core" Version="2.4.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="NJsonSchema" Version="9.10.67" />
   </ItemGroup>
 
