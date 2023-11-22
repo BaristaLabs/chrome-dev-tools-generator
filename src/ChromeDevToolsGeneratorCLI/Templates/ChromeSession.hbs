@@ -225,6 +225,7 @@
         {
             if (m_sessionSocket.State != WebSocketState.Open)
             {
+                m_openEvent.Reset();
                 m_sessionSocket.Open();
 
                 await Task.Run(() => m_openEvent.Wait(cancellationToken));
