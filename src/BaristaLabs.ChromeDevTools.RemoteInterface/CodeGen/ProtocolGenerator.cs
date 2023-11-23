@@ -131,9 +131,11 @@
                                 };
                             break;
                         case "array":
-                            if ((type.Items == null || String.IsNullOrWhiteSpace(type.Items.Type)) && type.Items.TypeReference != "StringIndex")
+                            if ((type.Items == null || String.IsNullOrWhiteSpace(type.Items.Type))
+                                && type.Items.TypeReference != "StringIndex"
+                                && type.Items.TypeReference != "FilterEntry")
                             {
-                                throw new NotImplementedException("Did not expect a top-level domain array type to specify a TypeReference");
+                                throw new NotImplementedException($"Did not expect array type {type.ToString()} of top-level domain {domain.ToString()} to specify a TypeReference");
                             }
 
                             string itemType;
@@ -153,6 +155,9 @@
                                     {
                                         case "StringIndex":
                                             itemType = "string";
+                                            break;
+                                        case "FilterEntry":
+                                            itemType = "FilterEntry";
                                             break;
                                         default:
                                             throw new NotImplementedException($"Did not expect a top-level domain array type to specify a type reference of {type.Items.TypeReference}");
