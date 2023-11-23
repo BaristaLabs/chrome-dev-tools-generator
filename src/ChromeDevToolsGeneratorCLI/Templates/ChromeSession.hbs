@@ -18,7 +18,7 @@
     {
         private readonly string m_endpointAddress;
         private readonly ILogger<ChromeSession> m_logger;
-        private readonly ConcurrentDictionary<string, ConcurrentBag<Action<object>>> m_eventHandlers = new ConcurrentDictionary<string, ConcurrentBag<Action<object>>>();
+        private readonly ConcurrentDictionary<object, ConcurrentBag<Action<object>>> m_eventHandlers = new ConcurrentDictionary<object, ConcurrentBag<Action<object>>>();
         private readonly ConcurrentDictionary<Type, string> m_eventTypeMap = new ConcurrentDictionary<Type, string>();
 
         private ActionBlock<string> m_messageQueue;
@@ -94,13 +94,13 @@
         /// <param name="millisecondsTimeout"></param>
         /// <param name="throwExceptionIfResponseNotReceived"></param>
         /// <returns></returns>
-        public async Task<ICommandResponse<TCommand>> SendCommand<TCommand>(TCommand command, CancellationToken cancellationToken = default(CancellationToken), int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
+        public async Task<ICommandResponse<TCommand>> SendCommand<TCommand>(TCommand command, string sessionId = "", CancellationToken cancellationToken = default(CancellationToken), int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
             where TCommand : ICommand
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var result = await SendCommand(command.CommandName, JToken.FromObject(command), cancellationToken, millisecondsTimeout, throwExceptionIfResponseNotReceived);
+            var result = await SendCommand(command.CommandName, JToken.FromObject(command), sessionId, cancellationToken, millisecondsTimeout, throwExceptionIfResponseNotReceived);
 
             if (result == null)
                 return null;
@@ -121,14 +121,14 @@
         /// <param name="millisecondsTimeout"></param>
         /// <param name="throwExceptionIfResponseNotReceived"></param>
         /// <returns></returns>
-        public async Task<TCommandResponse> SendCommand<TCommand, TCommandResponse>(TCommand command, CancellationToken cancellationToken = default(CancellationToken), int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
+        public async Task<TCommandResponse> SendCommand<TCommand, TCommandResponse>(TCommand command, string sessionId = "", CancellationToken cancellationToken = default(CancellationToken), int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
             where TCommand : ICommand
             where TCommandResponse : ICommandResponse<TCommand>
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var result = await SendCommand(command.CommandName, JToken.FromObject(command), cancellationToken, millisecondsTimeout, throwExceptionIfResponseNotReceived);
+            var result = await SendCommand(command.CommandName, JToken.FromObject(command), sessionId, cancellationToken, millisecondsTimeout, throwExceptionIfResponseNotReceived);
 
             if (result == null)
                 return default(TCommandResponse);
@@ -146,10 +146,13 @@
         /// <param name="throwExceptionIfResponseNotReceived"></param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public async Task<JToken> SendCommand(string commandName, JToken @params, CancellationToken cancellationToken = default(CancellationToken), int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
+        public async Task<JToken> SendCommand(string commandName, JToken @params, string sessionId = "", CancellationToken cancellationToken = default(CancellationToken), int? millisecondsTimeout = null, bool throwExceptionIfResponseNotReceived = true)
         {
+            sessionId = sessionId ?? "";
+
             var message = new
             {
+                sessionId,
                 id = Interlocked.Increment(ref m_currentCommandId),
                 method = commandName,
                 @params = @params
@@ -160,7 +163,7 @@
 
             await OpenSessionConnection(cancellationToken);
 
-            LogTrace("Sending {id} {method}: {params}", message.id, message.method, @params.ToString());
+            LogTrace("Sending: \nSessionId: {sessionId} \nID: {id} \nCommand Name: {method} \nCommand Params: {params}", sessionId, message.id, message.method, @params.ToString());
             
             var contents = JsonConvert.SerializeObject(message);
 
@@ -181,7 +184,7 @@
                 if (!String.IsNullOrWhiteSpace(errorData))
                     exceptionMessage = $"{exceptionMessage} - {errorData}";
 
-                LogTrace("Recieved Error Response {id}: {message} {data}", message.id, message, errorData);
+                LogTrace("Recieved Error Response: \nID: {id} \nRequest Message: {message} \nError Data: {data} \nException Message: {exceptionMessage}", message.id, message, errorData, exceptionMessage);
                 throw new CommandResponseException(exceptionMessage)
                 {
                     Code = m_lastResponse.Result.Value<long>("code")
@@ -195,9 +198,11 @@
         /// </summary>
         /// <typeparam name="TEvent">Event to subscribe to</typeparam>
         /// <param name="eventCallback"></param>
-        public void Subscribe<TEvent>(Action<TEvent> eventCallback)
+        public void Subscribe<TEvent>(Action<TEvent> eventCallback, string sessionId = "")
             where TEvent : IEvent
         {
+            sessionId = sessionId ?? "";
+
             if (eventCallback == null)
                 throw new ArgumentNullException(nameof(eventCallback));
 
@@ -212,7 +217,14 @@
                 });
 
             var callbackWrapper = new Action<object>(obj => eventCallback((TEvent)obj));
-            m_eventHandlers.AddOrUpdate(eventName,
+
+            var keyObj = new
+            {
+                SessionId = sessionId,
+                EventName = eventName
+            };
+
+            m_eventHandlers.AddOrUpdate(keyObj,
                 (m) => new ConcurrentBag<Action<object>>(new[] { callbackWrapper }),
                 (m, currentBag) =>
                 {
@@ -232,9 +244,17 @@
             }
         }
 
-        private void RaiseEvent(string methodName, JToken eventData)
+        private void RaiseEvent(string methodName, JToken eventData, string sessionId = "")
         {
-            if (m_eventHandlers.TryGetValue(methodName, out ConcurrentBag<Action<Object>> bag))
+            sessionId = sessionId ?? "";
+
+            var keyObj = new
+            {
+                SessionId = sessionId,
+                EventName = methodName
+            };
+
+            if (m_eventHandlers.TryGetValue(keyObj, out ConcurrentBag<Action<Object>> bag))
             {
                 if (!EventTypeMap.TryGetTypeForMethodName(methodName, out Type eventType))
                     throw new InvalidOperationException($"Unknown {methodName} does not correspond to a known event type.");
@@ -280,8 +300,11 @@
             {
                 var method = methodProperty.Value<string>();
                 var eventData = messageObject["params"];
-                LogTrace("Recieved Event {method}: {params}", method, eventData.ToString());
-                RaiseEvent(method, eventData);
+                var sessionId = messageObject.TryGetValue("sessionId", out JToken sessionIdProperty)
+                    ? sessionIdProperty.Value<string>()
+                    : "";
+                LogTrace("Recieved Event: \nEvent Name: {method} \nParams: {params} \nSessionId: {sessionId}", method, eventData.ToString(), sessionId);
+                RaiseEvent(method, eventData, sessionId);
                 return;
             }
 
